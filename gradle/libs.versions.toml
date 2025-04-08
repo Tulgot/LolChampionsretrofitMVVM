@@ -12,6 +12,7 @@ hilt = "2.49"
 retrofit = "2.9.0"
 coilCompose = "2.6.0"
 hiltNavigationCompose = "1.2.0"
+okhttp-bom = "4.12.0"
 
 
 [libraries]
@@ -39,6 +40,9 @@ dagger-hilt-navigation = { module = "androidx.hilt:hilt-navigation-compose", ver
 retrofit2-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 
+okhttp3-okhttp-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref = "okhttp-bom" }
+okhttp3-okhttp = { group = "com.squareup.okhttp3", name = "okhttp" }
+okhttp3-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

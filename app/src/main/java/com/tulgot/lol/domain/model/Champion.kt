@@ -1,7 +1,6 @@
 package com.tulgot.lol.domain.model
 
 import com.google.gson.annotations.SerializedName
-import com.tulgot.lol.data.response.SpellDto
 
 data class Champion(
     @SerializedName("blurb")
@@ -19,7 +18,7 @@ data class Champion(
     @SerializedName("passive")
     val passive: Passive?,
     @SerializedName("spells")
-    val spells: List<Spell> = listOf(),
+    val spells: Spell?,
     @SerializedName("tags")
     val tags: List<String> = listOf(),
     @SerializedName("title")

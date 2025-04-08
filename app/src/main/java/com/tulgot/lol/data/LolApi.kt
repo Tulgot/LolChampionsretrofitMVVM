@@ -5,7 +5,7 @@ import retrofit2.http.GET
 
 interface LolApi {
 
-    @GET("/champion.json")
+    @GET("champion.json")
     suspend fun getChampionList(): ChampionResponseDto
 
     companion object{

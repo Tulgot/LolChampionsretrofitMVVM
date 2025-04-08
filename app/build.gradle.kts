@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.tulgot.lol"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.tulgot.lol"
@@ -62,7 +62,6 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
-
     // Hilt (dagger/hilt)
     implementation(libs.dagger.hilt)
     implementation(libs.dagger.hilt.navigation)
@@ -74,6 +73,9 @@ dependencies {
     // Retrofit
     implementation(libs.retrofit2.retrofit)
     implementation(libs.converter.gson)
+    implementation(platform(libs.okhttp3.okhttp.bom))
+    implementation(libs.okhttp3.okhttp)
+    implementation(libs.okhttp3.logging.interceptor)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -82,4 +84,5 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
 }
