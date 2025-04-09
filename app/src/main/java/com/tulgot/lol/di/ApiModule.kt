@@ -11,6 +11,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
 import javax.inject.Singleton
+import com.tulgot.lol.domain.BASE_URL
 
 
 @Module
@@ -42,7 +43,7 @@ object ApiModule {
     fun providesLolApi(): LolApi {
         return Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(LolApi.BASE_URL)
+            .baseUrl(BASE_URL)
             .client(client)
             .build().create()
     }
