@@ -41,7 +41,7 @@ import com.tulgot.lol.domain.network.UiStates
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChampionListScreen(
-    championListViewModel: ChampionListViewModel = hiltViewModel(), modifier: Modifier
+    championListViewModel: ChampionListViewModel = hiltViewModel()
 ) {
 
     val championListResult by championListViewModel.championListState.collectAsState()
