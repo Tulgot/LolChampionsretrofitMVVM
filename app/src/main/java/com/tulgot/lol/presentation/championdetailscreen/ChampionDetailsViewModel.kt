@@ -1,4 +1,4 @@
-package com.tulgot.lol.presentation.championlistscreen
+package com.tulgot.lol.presentation.championdetailscreen
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -14,55 +14,45 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ChampionListViewModel @Inject constructor(
+class ChampionDetailsViewModel @Inject constructor(
     private val lolChampionsRepository: LolChampionsRepository
-): ViewModel() {
+): ViewModel(){
 
-    private var _championListState = MutableStateFlow(ChampionListState())
-    val championListState = _championListState.asStateFlow()
+    private var _championDteailsState = MutableStateFlow(ChampionDetailsState())
+    val championDetailsState = _championDteailsState.asStateFlow()
 
     init {
         viewModelScope.launch {
-                loadChampionList()
-            }
+            loadChampionDetails()
+        }
     }
 
-    /*private fun loadChampionList(){
-        viewModelScope.launch {
-            lolChampionsRepository.getAllChampions().collect{Response->
-                _championList.update {
-                    it.copy(championList = Response)
-                }
-            }
-        }
-    } */
-
-    private fun loadChampionList(){
+    private fun loadChampionDetails(){
         viewModelScope.launch {
             try {
-                _championListState.update {
+                _championDteailsState.update {
                     it.copy(state = UiStates.LOADING)
                 }
             }catch (e: Exception){
                 e.stackTraceToString()
             }
-            lolChampionsRepository.getAllChampions().catch { cause ->
+            lolChampionsRepository.getChampionDetails(championDetailsState.value.name).catch { cause ->
                 Log.e(this::class.simpleName, cause.toString())
-                _championListState.update {
+                _championDteailsState.update {
                     it.copy(
-                        championList = null,
+                        championDetails = null,
                         state = UiStates.FAILURE
                     )
                 }
             }.collect{ response ->
-                _championListState.update {
+                _championDteailsState.update {
                     it.copy(
-                        championList = response,
+                        championDetails = response,
                         state = UiStates.SUCCESS
                     )
                 }
-
             }
+
         }
     }
 

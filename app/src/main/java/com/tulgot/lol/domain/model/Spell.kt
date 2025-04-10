@@ -8,7 +8,7 @@ data class Spell (
     @SerializedName("id")
     val id: String? = "",
     @SerializedName("image")
-    val image: Image? = Image(),
+    val image: Image?,
     @SerializedName("name")
     val name: String? = ""
 )

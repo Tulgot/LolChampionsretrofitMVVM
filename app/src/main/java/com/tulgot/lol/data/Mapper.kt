@@ -32,8 +32,9 @@ fun ChampionDto.toChampion() = Champion(
     id = id,
     name = name,
     passive = passive?.toPassive(),
-    spells = spells?.toSpell()
-
+    spells = spells?.map {
+        it.toSpell()
+    }
 )
 
 fun ImageDto.toImage() = Image(

@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class LolChampionsRepositoryImpl @Inject constructor(
-    private val lolApi: LolApi
+    private val lolApi: LolApi,
 ): LolChampionsRepository{
 
     override suspend fun getAllChampions(): Flow<ChampionResponse> {
@@ -17,5 +17,14 @@ class LolChampionsRepositoryImpl @Inject constructor(
             )
         }
     }
+
+    override suspend fun getChampionDetails(name: String): Flow<ChampionResponse> {
+        return flow {
+            emit(
+                lolApi.getChampionByName(name).toChampionResponse()
+            )
+        }
+    }
+
 
 }

@@ -18,8 +18,6 @@ import com.tulgot.lol.domain.BASE_URL
 @InstallIn(SingletonComponent::class)
 object ApiModule {
 
-
-
     /*@Provides
     @Singleton
     private fun provideOkHttpClient(): OkHttpClient {

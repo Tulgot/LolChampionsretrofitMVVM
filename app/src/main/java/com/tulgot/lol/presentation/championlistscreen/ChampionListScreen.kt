@@ -1,7 +1,9 @@
 package com.tulgot.lol.presentation.championlistscreen
 
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -38,10 +41,10 @@ import com.tulgot.lol.domain.network.UiStates
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChampionListScreen(
-    championListViewModel: ChampionListViewModel = hiltViewModel()
+    championListViewModel: ChampionListViewModel = hiltViewModel(), modifier: Modifier
 ) {
 
-    val championListResult by championListViewModel.championList.collectAsState()
+    val championListResult by championListViewModel.championListState.collectAsState()
     val championList = championListResult.championList?.data?.toList()
 
     Scaffold(
@@ -70,22 +73,25 @@ fun ChampionListScreen(
                 }
 
                 UiStates.LOADING -> {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(80.dp)
-                            .align(Alignment.CenterHorizontally),
-                        color = MaterialTheme.colorScheme.primary
-                    )
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .size(80.dp),
+                            color = MaterialTheme.colorScheme.primary,
+                            )
+                    }
                 }
 
-                UiStates.SUCCESS -> {LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    championList?.let {
-                        items(it.size) {
-                            ChampionCard(championList[it])
+                UiStates.SUCCESS -> {
+                    LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    championList?.let { championlist ->
+                        items(championlist.size) { champion ->
+                            ChampionCard(championList[champion])
                         }
                     }
 
                     }
+
                 }
 
                 UiStates.NONE -> {}

@@ -17,3 +17,4 @@ data class ChampionResponseDto(
 )
 
 fun Map<String, ChampionDto>.toChampionList(): List<ChampionDto> = this.values.toList()
+

@@ -18,7 +18,7 @@ data class Champion(
     @SerializedName("passive")
     val passive: Passive?,
     @SerializedName("spells")
-    val spells: Spell?,
+    val spells: List<Spell>? = emptyList(),
     @SerializedName("tags")
     val tags: List<String> = listOf(),
     @SerializedName("title")
