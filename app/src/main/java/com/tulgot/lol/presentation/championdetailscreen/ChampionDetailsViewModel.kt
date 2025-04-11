@@ -1,19 +1,14 @@
 package com.tulgot.lol.presentation.championdetailscreen
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.tulgot.lol.domain.LolChampionsRepository
-import com.tulgot.lol.domain.model.Champion
-import com.tulgot.lol.domain.model.ChampionResponse
 import com.tulgot.lol.domain.network.UiStates
 import com.tulgot.lol.presentation.ChampionDetails
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.scopes.ViewModelScoped
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -25,7 +20,7 @@ import javax.inject.Inject
 class ChampionDetailsViewModel @Inject constructor(
     private val lolChampionsRepository: LolChampionsRepository,
     savedStateHandle: SavedStateHandle
-): ViewModel() {
+) : ViewModel() {
 
     private var _championDteailsState = MutableStateFlow(ChampionDetailsState())
     val championDetailsState = _championDteailsState.asStateFlow()
@@ -39,7 +34,7 @@ class ChampionDetailsViewModel @Inject constructor(
 
     }
 
-    private fun loadChampionDetails(name: String){
+    private fun loadChampionDetails(name: String) {
         viewModelScope.launch {
             try {
                 _championDteailsState.update {
