@@ -20,7 +20,7 @@ data class Champion(
     @SerializedName("spells")
     val spells: List<Spell>? = emptyList(),
     @SerializedName("tags")
-    val tags: List<String> = listOf(),
+    val tags: List<String> = emptyList(),
     @SerializedName("title")
     val title: String? = ""
 )

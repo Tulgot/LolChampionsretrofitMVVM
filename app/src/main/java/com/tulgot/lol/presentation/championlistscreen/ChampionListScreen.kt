@@ -26,7 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -41,13 +40,15 @@ import com.tulgot.lol.domain.network.UiStates
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChampionListScreen(
-    championListViewModel: ChampionListViewModel = hiltViewModel()
+    championListViewModel: ChampionListViewModel = hiltViewModel(),
+    navigateToDetail: (String) -> Unit,
 ) {
 
     val championListResult by championListViewModel.championListState.collectAsState()
     val championList = championListResult.championList?.data?.toList()
+    val context = LocalContext.current
 
-    Scaffold(
+    Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 colors = topAppBarColors(
@@ -69,29 +70,29 @@ fun ChampionListScreen(
         ) {
             when (championListResult.state) {
                 UiStates.FAILURE -> {
-                    Toast.makeText(LocalContext.current, "No hay datos", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "No hay datos", Toast.LENGTH_SHORT).show()
                 }
 
                 UiStates.LOADING -> {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator(
                             modifier = Modifier
                                 .size(80.dp),
                             color = MaterialTheme.colorScheme.primary,
-                            )
+                        )
                     }
                 }
 
                 UiStates.SUCCESS -> {
+
                     LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    championList?.let { championlist ->
-                        items(championlist.size) { champion ->
-                            ChampionCard(championList[champion])
+                        championList?.let { championlist ->
+                            items(championlist.size) { champion ->
+                                ChampionCard(championList[champion], navigateToDetail)
+                            }
                         }
-                    }
 
                     }
-
                 }
 
                 UiStates.NONE -> {}
@@ -104,11 +105,15 @@ fun ChampionListScreen(
 }
 
 @Composable
-fun ChampionCard(championList: Champion) {
+fun ChampionCard(championList: Champion, navigateToDetail: (String) -> Unit) {
 
+    val name = championList.id.toString()
     Row(
-        modifier = Modifier,
-        horizontalArrangement = Arrangement.spacedBy(10.dp)
+        modifier = Modifier.clickable {
+            //Toast.makeText(context, "champion name: ${championList.id.toString()}", Toast.LENGTH_SHORT).show()
+            navigateToDetail(name)
+        },
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
     ) {
 
         AsyncImage(
@@ -120,9 +125,11 @@ fun ChampionCard(championList: Champion) {
                 .weight(0.3f)
                 .height(180.dp)
         )
-        Column(modifier = Modifier
-            .weight(0.7f)
-            .padding(vertical = 10.dp)) {
+        Column(
+            modifier = Modifier
+                .weight(0.7f)
+                .padding(vertical = 10.dp)
+        ) {
             Text(
                 championList.id.toString(),
                 style = MaterialTheme.typography.titleLarge,
@@ -137,7 +144,6 @@ fun ChampionCard(championList: Champion) {
                 lineHeight = 24.sp
             )
         }
-
 
     }
 }

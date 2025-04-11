@@ -7,7 +7,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.tulgot.lol.presentation.championlistscreen.ChampionListScreen
+import com.tulgot.lol.presentation.championdetailscreen.ChampionDetailsScreen
 import com.tulgot.lol.ui.theme.LOLTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,17 +23,18 @@ class MainActivity : ComponentActivity() {
 
                 val navController = rememberNavController()
 
-                NavHost(navController = navController, startDestination = ChampionListScreen) {
-                    composable<ChampionListScreen>{
-                        ChampionListScreen()
+                NavHost(navController = navController, startDestination = ChampionList) {
+                    composable<ChampionList>{
+                        ChampionListScreen{name -> navController.navigate(ChampionDetails(name = name)) }
+                    }
+
+                    composable<ChampionDetails> {
+                        val name: ChampionDetails = it.toRoute()
+                        ChampionDetailsScreen(name.name)
                     }
 
                 }
 
-
-
-                    //ChampionListScreen()
-                    //ChampionDetailsScreen()
             }
         }
     }

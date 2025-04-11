@@ -3,6 +3,8 @@ package com.tulgot.lol.presentation
 import kotlinx.serialization.Serializable
 
 
+@Serializable
+object ChampionList
 
 @Serializable
-object ChampionListScreen
+data class ChampionDetails(val name: String)

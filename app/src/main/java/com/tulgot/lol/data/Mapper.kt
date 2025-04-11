@@ -31,6 +31,8 @@ fun ChampionDto.toChampion() = Champion(
     lore = lore,
     id = id,
     name = name,
+    tags = tags,
+    title = title,
     passive = passive?.toPassive(),
     spells = spells?.map {
         it.toSpell()

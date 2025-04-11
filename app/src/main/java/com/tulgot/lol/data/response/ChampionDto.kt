@@ -22,7 +22,7 @@ data class ChampionDto(
     @SerializedName("spells")
     val spells: List<SpellDto>? = emptyList(),
     @SerializedName("tags")
-    val tags: List<String> = listOf(),
+    val tags: List<String> = emptyList(),
     @SerializedName("title")
     val title: String? = ""
 )
