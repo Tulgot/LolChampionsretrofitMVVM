@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable<ChampionDetails> {
-                        val name: ChampionDetails = it.toRoute()
+
                         ChampionDetailsScreen()
                     }
 
