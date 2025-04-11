@@ -7,7 +7,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
 import com.tulgot.lol.presentation.championlistscreen.ChampionListScreen
 import com.tulgot.lol.presentation.championdetailscreen.ChampionDetailsScreen
 import com.tulgot.lol.ui.theme.LOLTheme
