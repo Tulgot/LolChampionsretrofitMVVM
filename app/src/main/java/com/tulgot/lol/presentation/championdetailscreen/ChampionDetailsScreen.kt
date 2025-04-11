@@ -38,7 +38,6 @@ import com.tulgot.lol.domain.network.UiStates
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChampionDetailsScreen(
-    name: String,
     championDetailsViewModel: ChampionDetailsViewModel = hiltViewModel()
 ) {
 
