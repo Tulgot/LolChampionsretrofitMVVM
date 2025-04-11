@@ -104,13 +104,16 @@ fun ChampionListScreen(
 
 }
 
+
 @Composable
 fun ChampionCard(championList: Champion, navigateToDetail: (String) -> Unit) {
 
+
     val name = championList.id.toString()
+
+
     Row(
         modifier = Modifier.clickable {
-            //Toast.makeText(context, "champion name: ${championList.id.toString()}", Toast.LENGTH_SHORT).show()
             navigateToDetail(name)
         },
         horizontalArrangement = Arrangement.spacedBy(10.dp),

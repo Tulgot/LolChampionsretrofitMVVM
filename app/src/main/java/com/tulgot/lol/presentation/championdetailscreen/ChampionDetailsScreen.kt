@@ -1,16 +1,21 @@
 package com.tulgot.lol.presentation.championdetailscreen
 
 import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -23,6 +28,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -30,9 +37,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.tulgot.lol.domain.SPELL_ASSET
 import com.tulgot.lol.domain.SPLASH_ASSET
 import com.tulgot.lol.domain.SQUARE_ASSET
 import com.tulgot.lol.domain.model.Champion
+import com.tulgot.lol.domain.model.Passive
+import com.tulgot.lol.domain.model.Spell
 import com.tulgot.lol.domain.network.UiStates
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -79,7 +89,7 @@ fun ChampionDetailsScreen(
                     )
 
                 }) { innerPadding ->
-                Column(
+                Box(
                     modifier = Modifier
                         .padding(innerPadding)
                         .fillMaxSize()
@@ -96,43 +106,172 @@ fun ChampionDetailsScreen(
 
 @Composable
 fun ChampionDetalCard(details: Champion?) {
-    Row(modifier = Modifier.fillMaxWidth()) {
-        AsyncImage(
-            model = SPLASH_ASSET + "${details?.id}_0.jpg",
-            contentDescription = null,
-            contentScale = ContentScale.FillWidth,
-        )
-    }
-    Spacer(modifier = Modifier.height(10.dp))
-    Row(modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = "Name: "+details?.name.toString(),
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
 
-            )
-
-        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopEnd) {
+    Column(
+        modifier = Modifier.verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Row(modifier = Modifier.fillMaxWidth()) {
             AsyncImage(
-                model = SQUARE_ASSET + "${details?.id}.png",
+                model = SPLASH_ASSET + "${details?.id}_0.jpg",
                 contentDescription = null,
-
-                modifier = Modifier
-                    .size(40.dp)
-                    .fillMaxWidth(),
+                contentScale = ContentScale.FillWidth,
             )
         }
-    }
-    Spacer(modifier = Modifier.height(20.dp))
-    Text("Title: "+details?.title.toString())
-    Spacer(modifier = Modifier.height(20.dp))
-    Text(text = "Classes:")
 
-    LazyColumn() {
-        items(details?.tags!!.size) { index ->
-            Text(details.tags[index])
+        Column(
+            modifier = Modifier.padding(horizontal = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+            ) {
+                Text(
+                    text = "Name: ",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+                Text(
+                    text = details?.name.toString(),
+                    fontSize = 20.sp,
+                )
+
+
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopEnd) {
+                    AsyncImage(
+                        model = SQUARE_ASSET + "${details?.id}.png",
+                        contentDescription = null,
+
+                        modifier = Modifier
+                            .size(40.dp)
+                            .fillMaxWidth(),
+                    )
+                }
+            }
+
+            Text(
+                text = "Title: ",
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp
+            )
+            Text(
+                text = details?.title?.first()?.uppercase() + details?.title?.drop(1),
+                fontSize = 20.sp
+            )
+
+            Row {
+                Column {
+                    Text(text = "Class(es): ", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                }
+
+                Column {
+                    repeat(details?.tags!!.size) {
+                        Text(
+                            text = details.tags[it],
+                            fontSize = 20.sp
+                        )
+                    }
+                }
+            }
+
+            Row(
+                modifier = Modifier
+                    .wrapContentHeight()
+                    .fillMaxWidth()
+            ) {
+                Column {
+                    Text(text = "Lore: ", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                }
+                Column(modifier = Modifier.wrapContentHeight()) {
+                    Text(
+                        text = details?.lore.toString(),
+                        fontSize = 20.sp
+                    )
+                }
+            }
+        }
+
+        Column(modifier = Modifier.padding(8.dp)) {
+            Spells(details?.spells!!.toList())
+        }
+        Column(modifier = Modifier.padding(8.dp)) {
+            Passive(details?.passive!!)
+        }
+
+    }
+}
+
+@Composable
+fun Spells(spell: List<Spell>) {
+    Text(text = "Spells", fontSize = 30.sp, fontWeight = FontWeight.Bold)
+    Row(
+        modifier = Modifier
+            .horizontalScroll(rememberScrollState())
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        repeat(spell.size) {
+            Column(
+                modifier = Modifier
+                    .wrapContentHeight()
+                    .width(200.dp)
+            ) {
+                Box(modifier = Modifier.clip(RoundedCornerShape(20.dp))) {
+                    Box(
+                        modifier = Modifier
+                            .background(color = Color.LightGray)
+                            .padding(8.dp)
+                    ) {
+                        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                            Row {
+                                Text(
+                                    text = spell[it].name.toString(),
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+
+                            Row {
+                                AsyncImage(
+                                    model = SPELL_ASSET + "${spell[it].id}.png",
+                                    contentDescription = null,
+                                    contentScale = ContentScale.FillWidth,
+                                    modifier = Modifier
+                                        .width(100.dp)
+                                        .clip(RoundedCornerShape(20.dp))
+                                )
+                            }
+
+                            Row {
+                                Text(
+                                    text = spell[it].description.toString(),
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            }
+                        }
+                    }
+                }
+
+            }
         }
     }
+}
 
-
+@Composable
+fun Passive(passive: Passive) {
+    Text(text = "Passive:", fontSize = 30.sp, fontWeight = FontWeight.Bold)
+    Box(modifier = Modifier.clip(RoundedCornerShape(20.dp))) {
+        Box(modifier = Modifier.background(color = Color.LightGray)) {
+            Column(modifier = Modifier.padding(8.dp)) {
+                Row {
+                    Text(passive.name.toString(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                }
+                Row {
+                    Text(passive.description.toString())
+                }
+            }
+        }
+    }
 }
