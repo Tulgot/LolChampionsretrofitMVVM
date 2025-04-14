@@ -15,35 +15,25 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChampionListViewModel @Inject constructor(
-    private val lolChampionsRepository: LolChampionsRepository
-): ViewModel() {
+    private val lolChampionsRepository: LolChampionsRepository,
+) : ViewModel() {
 
     private var _championListState = MutableStateFlow(ChampionListState())
     val championListState = _championListState.asStateFlow()
 
     init {
         viewModelScope.launch {
-                loadChampionList()
-            }
+            loadChampionList()
+        }
     }
 
-    /*private fun loadChampionList(){
-        viewModelScope.launch {
-            lolChampionsRepository.getAllChampions().collect{Response->
-                _championList.update {
-                    it.copy(championList = Response)
-                }
-            }
-        }
-    } */
-
-    private fun loadChampionList(){
+    private fun loadChampionList() {
         viewModelScope.launch {
             try {
                 _championListState.update {
                     it.copy(state = UiStates.LOADING)
                 }
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 e.stackTraceToString()
             }
             lolChampionsRepository.getAllChampions().catch { cause ->
@@ -54,7 +44,7 @@ class ChampionListViewModel @Inject constructor(
                         state = UiStates.FAILURE
                     )
                 }
-            }.collect{ response ->
+            }.collect { response ->
                 _championListState.update {
                     it.copy(
                         championList = response,

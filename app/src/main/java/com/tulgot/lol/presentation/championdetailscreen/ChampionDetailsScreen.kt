@@ -48,12 +48,11 @@ import com.tulgot.lol.domain.network.UiStates
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChampionDetailsScreen(
-    championDetailsViewModel: ChampionDetailsViewModel = hiltViewModel()
+    championDetailsViewModel: ChampionDetailsViewModel = hiltViewModel(),
 ) {
 
     val championDetailsResult by championDetailsViewModel.championDetailsState.collectAsState()
     val details = championDetailsResult.championDetails?.data?.firstOrNull()
-
 
     when (championDetailsResult.state) {
         UiStates.FAILURE -> {
@@ -258,6 +257,7 @@ fun Spells(spell: List<Spell>) {
         }
     }
 }
+
 
 @Composable
 fun Passive(passive: Passive) {

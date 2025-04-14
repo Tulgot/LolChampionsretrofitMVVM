@@ -25,16 +25,15 @@ class ChampionDetailsViewModel @Inject constructor(
     private var _championDteailsState = MutableStateFlow(ChampionDetailsState())
     val championDetailsState = _championDteailsState.asStateFlow()
 
-
     init {
 
         val args = savedStateHandle.toRoute<ChampionDetails>().name
-
         loadChampionDetails(args)
 
     }
 
     private fun loadChampionDetails(name: String) {
+
         viewModelScope.launch {
             try {
                 _championDteailsState.update {
