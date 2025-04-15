@@ -8,3 +8,6 @@ object ChampionList
 
 @Serializable
 data class ChampionDetails(val name: String)
+
+@Serializable
+object Settings

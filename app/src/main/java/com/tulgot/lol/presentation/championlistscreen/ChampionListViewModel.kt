@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.tulgot.lol.domain.LolChampionsRepository
 import com.tulgot.lol.domain.network.UiStates
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -28,7 +29,7 @@ class ChampionListViewModel @Inject constructor(
     }
 
     private fun loadChampionList() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 _championListState.update {
                     it.copy(state = UiStates.LOADING)

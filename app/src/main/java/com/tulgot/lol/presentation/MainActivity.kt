@@ -9,6 +9,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.tulgot.lol.presentation.championlistscreen.ChampionListScreen
 import com.tulgot.lol.presentation.championdetailscreen.ChampionDetailsScreen
+import com.tulgot.lol.presentation.settingscreen.SettingsScreen
+
 import com.tulgot.lol.ui.theme.LOLTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -24,11 +26,18 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(navController = navController, startDestination = ChampionList) {
                     composable<ChampionList>{
-                        ChampionListScreen{name -> navController.navigate(ChampionDetails(name = name)) }
+                        ChampionListScreen(
+                            navigateToDetail = { name -> navController.navigate(ChampionDetails(name = name)) },
+                            navigateToSettings = { navController.navigate(Settings)}
+                        )
                     }
 
                     composable<ChampionDetails> {
-                        ChampionDetailsScreen()
+                        ChampionDetailsScreen{ navController.navigate(Settings) }
+                    }
+
+                    composable<Settings> {
+                        SettingsScreen{ navController.navigateUp() }
                     }
 
                 }

@@ -2,6 +2,7 @@ package com.tulgot.lol.presentation.championdetailscreen
 
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,8 +17,11 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -37,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.tulgot.lol.domain.PASSIVE_ASSET
 import com.tulgot.lol.domain.SPELL_ASSET
 import com.tulgot.lol.domain.SPLASH_ASSET
 import com.tulgot.lol.domain.SQUARE_ASSET
@@ -49,45 +54,64 @@ import com.tulgot.lol.domain.network.UiStates
 @Composable
 fun ChampionDetailsScreen(
     championDetailsViewModel: ChampionDetailsViewModel = hiltViewModel(),
+    navigateToSettings: () -> Unit
 ) {
 
     val championDetailsResult by championDetailsViewModel.championDetailsState.collectAsState()
     val details = championDetailsResult.championDetails?.data?.firstOrNull()
 
-    when (championDetailsResult.state) {
-        UiStates.FAILURE -> {
-            Toast.makeText(
-                LocalContext.current,
-                "No hay datos de: ${details?.name}",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-
-        UiStates.LOADING -> {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(80.dp),
-                    color = MaterialTheme.colorScheme.primary,
-                )
-            }
-        }
-
-        UiStates.NONE -> {}
-        UiStates.SUCCESS -> {
-            Scaffold(modifier = Modifier.fillMaxSize(),
-                topBar = {
-                    TopAppBar(
-                        colors = topAppBarColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            titleContentColor = MaterialTheme.colorScheme.primary,
-                        ),
-                        title = {
-                            Text(details?.name.toString())
-                        }
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            TopAppBar(
+                colors = topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.primary,
+                ),
+                title = {
+                    Text(details?.name.toString())
+                },
+                actions = {
+                    Icon(
+                        imageVector = Icons.Rounded.Settings,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier
+                            .size(30.dp)
+                            .clickable {
+                                navigateToSettings()
+                            }
                     )
 
-                }) { innerPadding ->
+                }
+            )
+
+        },
+
+        ) { innerPadding ->
+
+        when (championDetailsResult.state) {
+            UiStates.FAILURE -> {
+                Toast.makeText(
+                    LocalContext.current,
+                    "No hay datos de: ${details?.name}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            UiStates.LOADING -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(80.dp),
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                }
+            }
+
+            UiStates.NONE -> {}
+            UiStates.SUCCESS -> {
+
                 Box(
                     modifier = Modifier
                         .padding(innerPadding)
@@ -234,7 +258,7 @@ fun Spells(spell: List<Spell>) {
 
                             Row {
                                 AsyncImage(
-                                    model = SPELL_ASSET + "${spell[it].id}.png",
+                                    model = SPELL_ASSET + spell[it].image?.full,
                                     contentDescription = null,
                                     contentScale = ContentScale.FillWidth,
                                     modifier = Modifier
@@ -267,6 +291,16 @@ fun Passive(passive: Passive) {
             Column(modifier = Modifier.padding(8.dp)) {
                 Row {
                     Text(passive.name.toString(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                }
+                Row {
+                    AsyncImage(
+                        model = PASSIVE_ASSET + passive.image?.full,
+                        contentDescription = null,
+                        contentScale = ContentScale.FillWidth,
+                        modifier = Modifier
+                            .width(100.dp)
+                            .clip(RoundedCornerShape(20.dp))
+                    )
                 }
                 Row {
                     Text(passive.description.toString())

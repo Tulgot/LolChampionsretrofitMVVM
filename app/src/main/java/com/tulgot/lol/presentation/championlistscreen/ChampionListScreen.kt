@@ -12,8 +12,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -42,6 +45,7 @@ import com.tulgot.lol.domain.network.UiStates
 fun ChampionListScreen(
     championListViewModel: ChampionListViewModel = hiltViewModel(),
     navigateToDetail: (String) -> Unit,
+    navigateToSettings: () -> Unit
 ) {
 
     val championListResult by championListViewModel.championListState.collectAsState()
@@ -57,6 +61,19 @@ fun ChampionListScreen(
                 ),
                 title = {
                     Text("Champions")
+                },
+                actions = {
+                    Icon(
+                        imageVector = Icons.Rounded.Settings,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier
+                            .size(30.dp)
+                            .clickable {
+                                navigateToSettings()
+                            }
+                    )
+
                 }
             )
         }
@@ -108,9 +125,7 @@ fun ChampionListScreen(
 @Composable
 fun ChampionCard(championList: Champion, navigateToDetail: (String) -> Unit) {
 
-
     val name = championList.id.toString()
-
 
     Row(
         modifier = Modifier.clickable {
@@ -150,3 +165,4 @@ fun ChampionCard(championList: Champion, navigateToDetail: (String) -> Unit) {
 
     }
 }
+
