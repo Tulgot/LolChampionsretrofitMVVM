@@ -18,15 +18,6 @@ import com.tulgot.lol.domain.BASE_URL
 @InstallIn(SingletonComponent::class)
 object ApiModule {
 
-    /*@Provides
-    @Singleton
-    private fun provideOkHttpClient(): OkHttpClient {
-        val interceptor: HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        }
-        return OkHttpClient.Builder().addInterceptor(interceptor).build()
-    }*/
-
     private val interceptor: HttpLoggingInterceptor =
         HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY

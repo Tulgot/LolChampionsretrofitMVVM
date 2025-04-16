@@ -37,7 +37,9 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable<Settings> {
-                        SettingsScreen{ navController.navigateUp() }
+                        SettingsScreen(
+                            navigateToChampionList = { navController.navigate(ChampionList) },
+                            )
                     }
 
                 }

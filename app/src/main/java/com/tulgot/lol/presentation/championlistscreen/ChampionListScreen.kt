@@ -83,7 +83,8 @@ fun ChampionListScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(horizontal = 20.dp)
-                .padding(top = 10.dp)
+                .padding(top = 10.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             when (championListResult.state) {
                 UiStates.FAILURE -> {

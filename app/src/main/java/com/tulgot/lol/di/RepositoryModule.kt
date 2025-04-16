@@ -15,5 +15,6 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindLolChampionsRepository(lolChampionsRepositoryImpl: LolChampionsRepositoryImpl)
-    : LolChampionsRepository
+            : LolChampionsRepository
+
 }
