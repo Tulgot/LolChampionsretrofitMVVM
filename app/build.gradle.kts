@@ -85,6 +85,11 @@ dependencies {
     //DataStore
     implementation(libs.androidx.datastore.preferences)
 
+    //Room
+    implementation("androidx.room:room-ktx:2.4.0")
+    kapt("androidx.room:room-compiler:2.4.0")
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

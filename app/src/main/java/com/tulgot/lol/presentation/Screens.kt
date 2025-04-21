@@ -11,3 +11,6 @@ data class ChampionDetails(val name: String)
 
 @Serializable
 object Settings
+
+@Serializable
+object BookMarks

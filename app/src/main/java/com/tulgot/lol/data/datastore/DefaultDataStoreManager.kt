@@ -33,4 +33,22 @@ class DefaultDataStoreManager @Inject constructor(
             null
         }
     }
+
+    override suspend fun putDeviceCheckBox(key: String, value: Boolean) {
+        val preferenceskey = booleanPreferencesKey(key)
+        context.dataStore.edit {
+            it[preferenceskey] = value
+        }
+    }
+
+    override suspend fun getDeviceCheckBox(key: String): Boolean? {
+        return try {
+            val preferenceKey = booleanPreferencesKey(key)
+            val preferences = context.dataStore.data.first()
+            preferences[preferenceKey]
+        }catch (e: Exception){
+            e.printStackTrace()
+            null
+        }
+    }
 }

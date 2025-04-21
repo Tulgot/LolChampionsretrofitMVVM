@@ -1,21 +1,24 @@
 package com.tulgot.lol.presentation
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.tulgot.lol.presentation.championlistscreen.ChampionListScreen
+import com.tulgot.lol.presentation.bookmarksscreen.BookMarksScreen
 import com.tulgot.lol.presentation.championdetailscreen.ChampionDetailsScreen
+import com.tulgot.lol.presentation.championlistscreen.ChampionListScreen
 import com.tulgot.lol.presentation.settingscreen.SettingsScreen
-
 import com.tulgot.lol.ui.theme.LOLTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -25,26 +28,32 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
 
                 NavHost(navController = navController, startDestination = ChampionList) {
-                    composable<ChampionList>{
+                    composable<ChampionList> {
                         ChampionListScreen(
                             navigateToDetail = { name -> navController.navigate(ChampionDetails(name = name)) },
-                            navigateToSettings = { navController.navigate(Settings)}
+                            navigateToSettings = { navController.navigate(Settings) },
+                            navigateToBookMarks = { navController.navigate(BookMarks) }
                         )
                     }
 
                     composable<ChampionDetails> {
-                        ChampionDetailsScreen{ navController.navigate(Settings) }
+                        ChampionDetailsScreen { navController.navigate(Settings) }
                     }
 
                     composable<Settings> {
                         SettingsScreen(
                             navigateToChampionList = { navController.navigate(ChampionList) },
-                            )
+                        )
+                    }
+
+                    composable<BookMarks> {
+                        BookMarksScreen()
                     }
 
                 }
 
             }
+
         }
     }
 }

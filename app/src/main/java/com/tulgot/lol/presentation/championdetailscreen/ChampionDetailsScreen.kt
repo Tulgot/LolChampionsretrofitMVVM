@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -117,7 +118,7 @@ fun ChampionDetailsScreen(
                         .padding(innerPadding)
                         .fillMaxSize()
                 ) {
-                    ChampionDetalCard(details)
+                    ChampionDetailCard(details)
 
                 }
 
@@ -128,7 +129,7 @@ fun ChampionDetailsScreen(
 }
 
 @Composable
-fun ChampionDetalCard(details: Champion?) {
+fun ChampionDetailCard(details: Champion?) {
 
     Column(
         modifier = Modifier.verticalScroll(rememberScrollState()),
@@ -244,7 +245,8 @@ fun Spells(spell: List<Spell>) {
                 Box(modifier = Modifier.clip(RoundedCornerShape(20.dp))) {
                     Box(
                         modifier = Modifier
-                            .background(color = Color.LightGray)
+                            .background(color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primaryContainer else
+                                Color.LightGray)
                             .padding(8.dp)
                     ) {
                         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -287,7 +289,8 @@ fun Spells(spell: List<Spell>) {
 fun Passive(passive: Passive) {
     Text(text = "Passive:", fontSize = 30.sp, fontWeight = FontWeight.Bold)
     Box(modifier = Modifier.clip(RoundedCornerShape(20.dp))) {
-        Box(modifier = Modifier.background(color = Color.LightGray)) {
+        Box(modifier = Modifier.background(color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primaryContainer else
+            Color.LightGray)) {
             Column(modifier = Modifier.padding(8.dp)) {
                 Row {
                     Text(passive.name.toString(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
