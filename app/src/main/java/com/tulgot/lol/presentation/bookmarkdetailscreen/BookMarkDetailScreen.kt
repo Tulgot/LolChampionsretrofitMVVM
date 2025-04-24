@@ -1,0 +1,206 @@
+package com.tulgot.lol.presentation.bookmarkdetailscreen
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
+import com.tulgot.lol.domain.SPLASH_ASSET
+import com.tulgot.lol.domain.SQUARE_ASSET
+import com.tulgot.lol.domain.room.ChampionRoom
+import com.tulgot.lol.presentation.championdetailscreen.ChampionDetailCard
+import com.tulgot.lol.presentation.championdetailscreen.Passive
+import com.tulgot.lol.presentation.championdetailscreen.Spells
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BookMarkDetailScreen(
+    navigateToChampionList: () -> Unit,
+    navigateToSettings: () -> Unit,
+    navigateToBookMarks: () ->Unit,
+    bookMarkDetailViewModel: BookMarkDetailViewModel = hiltViewModel()
+){
+
+    var expanded by remember { mutableStateOf(false) }
+
+    Scaffold(
+        modifier = Modifier.fillMaxWidth(),
+        topBar = {
+            TopAppBar(
+                colors = topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.primary,
+                ),
+                title = {
+                    Text("Settings")
+                },
+                actions = {
+                    Box(
+                        modifier = Modifier
+                            .padding(16.dp)
+                    ) {
+                        IconButton(onClick = { expanded = !expanded }) {
+                            Icon(
+                                imageVector = Icons.Rounded.MoreVert,
+                                contentDescription = "More options"
+                            )
+                        }
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text("Settings") },
+                                onClick = { navigateToSettings() }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Champion List") },
+                                onClick = { navigateToChampionList() }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("BookMarks") },
+                                onClick = { navigateToBookMarks() }
+                            )
+                        }
+                    }
+                }
+            )
+        }
+    ){ innerPadding ->
+
+        Box(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+        ) {
+
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    AsyncImage(
+                        model = SPLASH_ASSET + "${bookMarkDetailViewModel.championDetail.first().id}_0.jpg",
+                        contentDescription = null,
+                        contentScale = ContentScale.FillWidth,
+                    )
+                }
+
+                Column(
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+                    ) {
+                        Text(
+                            text = "Name: ",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                        )
+                        Text(
+                            text = bookMarkDetailViewModel.championDetail.first().name.toString(),
+                            fontSize = 20.sp,
+                        )
+
+
+                        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopEnd) {
+                            AsyncImage(
+                                model = SQUARE_ASSET + "${bookMarkDetailViewModel.championDetail.first()?.id}.png",
+                                contentDescription = null,
+
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .fillMaxWidth(),
+                            )
+                        }
+                    }
+
+                    Text(
+                        text = "Title: ",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp
+                    )
+                    Text(
+                        text = bookMarkDetailViewModel.championDetail.first().title?.first()?.uppercase() + bookMarkDetailViewModel.championDetail.first()?.title?.drop(1),
+                        fontSize = 20.sp
+                    )
+
+                    Row {
+                        Column {
+                            Text(text = "Class(es): ", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                        }
+
+                        Column {
+                            repeat(bookMarkDetailViewModel.taglist.size) {
+                                Text(
+                                    text = bookMarkDetailViewModel.taglist[it],
+                                    fontSize = 20.sp
+                                )
+                            }
+                        }
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .wrapContentHeight()
+                            .fillMaxWidth()
+                    ) {
+                        Column {
+                            Text(text = "Lore: ", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                        }
+                        Column(modifier = Modifier.wrapContentHeight()) {
+                            Text(
+                                text = bookMarkDetailViewModel.championDetail.first().lore.toString(),
+                                fontSize = 20.sp
+                            )
+                        }
+                    }
+                }
+
+                /*Column(modifier = Modifier.padding(8.dp)) {
+                    Spells(details?.spells!!.toList())
+                }
+                Column(modifier = Modifier.padding(8.dp)) {
+                    Passive(details?.passive!!)
+                }*/
+
+            }
+
+        }
+    }
+
+}

@@ -13,9 +13,6 @@ import com.tulgot.lol.domain.model.Passive
 import com.tulgot.lol.domain.model.Spell
 
 fun ChampionResponseDto.toChampionResponse() = ChampionResponse(
-    /*data = champion?.values?.map {
-        it.toChampion()
-    },*/
     data = champion?.toChampionList()?.map {
         it.toChampion()
     },

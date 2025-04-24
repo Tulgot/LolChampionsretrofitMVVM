@@ -14,15 +14,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.MoreVert
-import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -78,16 +74,6 @@ fun ChampionListScreen(
                     Text("Champions")
                 },
                 actions = {
-                    /*Icon(
-                        imageVector = Icons.Rounded.Settings,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier
-                            .size(30.dp)
-                            .clickable {
-                                navigateToSettings()
-                            }
-                    )*/
                     Box(
                         modifier = Modifier
                             .padding(16.dp)
@@ -105,7 +91,7 @@ fun ChampionListScreen(
                             )
                             DropdownMenuItem(
                                 text = { Text("BookMarks") },
-                                onClick = { navigateToBookMarks()}
+                                onClick = { navigateToBookMarks() }
                             )
                         }
                     }
@@ -186,7 +172,7 @@ fun ChampionCard(championList: Champion, navigateToDetail: (String) -> Unit) {
                 .padding(vertical = 10.dp)
         ) {
             Text(
-                championList.id.toString(),
+                championList.name.toString(),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )

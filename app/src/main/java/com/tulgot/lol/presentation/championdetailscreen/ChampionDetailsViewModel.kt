@@ -1,17 +1,12 @@
 package com.tulgot.lol.presentation.championdetailscreen
 
 import android.util.Log
-import android.widget.Toast
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.toRoute
-import com.tulgot.lol.data.database.toChampionEntity
-import com.tulgot.lol.data.database.toChampionRoom
 import com.tulgot.lol.domain.LolChampionsRepository
-import com.tulgot.lol.domain.model.Champion
 import com.tulgot.lol.domain.network.UiStates
 import com.tulgot.lol.domain.room.RoomManager
 import com.tulgot.lol.presentation.ChampionDetails
@@ -34,14 +29,17 @@ class ChampionDetailsViewModel @Inject constructor(
     private var _championDetailsState = MutableStateFlow(ChampionDetailsState())
     val championDetailsState = _championDetailsState.asStateFlow()
 
+    var checkDB = mutableStateOf(true)
+
     init {
 
         val args = savedStateHandle.toRoute<ChampionDetails>().name
         loadChampionDetails(args)
+        getRoomChampionById(args)
 
     }
 
-    fun championRoom(){
+    fun championRoom() {
         insertChampion()
     }
 
@@ -50,8 +48,17 @@ class ChampionDetailsViewModel @Inject constructor(
             val xyz = _championDetailsState.value.championDetails?.data?.first()
             try {
                 roomManager.insertChampionDetail(xyz!!)
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 e.stackTraceToString()
+            }
+        }
+    }
+
+    private fun getRoomChampionById(args: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (roomManager.getChampionById(args).size == 0) {
+                true -> checkDB.value = true
+                false -> checkDB.value = false
             }
         }
     }

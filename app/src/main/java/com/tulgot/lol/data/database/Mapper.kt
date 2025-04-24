@@ -19,20 +19,6 @@ fun Champion.toChampionEntity() =
         title = title.toString()
     )
 
-fun Champion.toChampionRoom() = ChampionRoom(
-    id = id.toString(),
-    blurb = blurb.toString(),
-    image = image.toString(),
-    name = name.toString(),
-    key = key.toString(),
-    lore = lore.toString(),
-    passive = passive.toString(),
-    spells = spells.toString(),
-    tags = tags.toString(),
-    title = title.toString()
-)
-
-
 fun ChampionEntity.toChampionRoom() =
     ChampionRoom(
         id = id,
@@ -46,3 +32,11 @@ fun ChampionEntity.toChampionRoom() =
         tags = tags,
         title = title
     )
+
+//val numbers = listOf(1, 2, 3, 4, 5, 6)
+//val snumbers = numbers.toString()
+//val lnumbers = "[1, 2, 3, 4, 5, 6]"
+//val ynumbers = lnumbers.substring(1, lnumbers.length-1)
+//val xnumbers = ynumbers.split(",").map { it.trim() }
+//val numberlist = xnumbers.toList()
+//println(numberlist[2])
