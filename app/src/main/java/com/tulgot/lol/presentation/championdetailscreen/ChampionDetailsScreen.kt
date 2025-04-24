@@ -1,5 +1,6 @@
 package com.tulgot.lol.presentation.championdetailscreen
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,9 +20,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -88,6 +92,16 @@ fun ChampionDetailsScreen(
             )
 
         },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    if (details != null) {
+                        championDetailsViewModel.championRoom()
+                    }
+                }
+            ) { Icon(Icons.Rounded.FavoriteBorder, null) }
+        },
+        floatingActionButtonPosition = FabPosition.End
 
         ) { innerPadding ->
 
@@ -245,8 +259,10 @@ fun Spells(spell: List<Spell>) {
                 Box(modifier = Modifier.clip(RoundedCornerShape(20.dp))) {
                     Box(
                         modifier = Modifier
-                            .background(color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primaryContainer else
-                                Color.LightGray)
+                            .background(
+                                color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primaryContainer else
+                                    Color.LightGray
+                            )
                             .padding(8.dp)
                     ) {
                         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -289,8 +305,12 @@ fun Spells(spell: List<Spell>) {
 fun Passive(passive: Passive) {
     Text(text = "Passive:", fontSize = 30.sp, fontWeight = FontWeight.Bold)
     Box(modifier = Modifier.clip(RoundedCornerShape(20.dp))) {
-        Box(modifier = Modifier.background(color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primaryContainer else
-            Color.LightGray)) {
+        Box(
+            modifier = Modifier.background(
+                color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primaryContainer else
+                    Color.LightGray
+            )
+        ) {
             Column(modifier = Modifier.padding(8.dp)) {
                 Row {
                     Text(passive.name.toString(), fontSize = 20.sp, fontWeight = FontWeight.Bold)

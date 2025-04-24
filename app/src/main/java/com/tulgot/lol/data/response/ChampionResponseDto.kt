@@ -2,12 +2,11 @@ package com.tulgot.lol.data.response
 
 
 import com.google.gson.annotations.SerializedName
-import com.tulgot.lol.domain.model.Champion
 
 
 data class ChampionResponseDto(
     @SerializedName("data")
-    val champion : Map<String, ChampionDto>? = emptyMap(),
+    val champion: Map<String, ChampionDto>? = emptyMap(),
     @SerializedName("format")
     val format: String? = "",
     @SerializedName("type")

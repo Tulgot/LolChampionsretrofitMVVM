@@ -1,5 +1,6 @@
 package com.tulgot.lol.presentation.championlistscreen
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,12 +15,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.FavoriteBorder
+import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -28,6 +33,9 @@ import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,10 +47,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.tulgot.lol.domain.IMAGEURL
+import com.tulgot.lol.domain.IMAGE_URL
 import com.tulgot.lol.domain.model.Champion
 import com.tulgot.lol.domain.network.UiStates
 
+@SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChampionListScreen(
@@ -55,6 +64,7 @@ fun ChampionListScreen(
     val championListResult by championListViewModel.championListState.collectAsState()
     val championList = championListResult.championList?.data?.toList()
     val context = LocalContext.current
+    var expanded by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -68,7 +78,7 @@ fun ChampionListScreen(
                     Text("Champions")
                 },
                 actions = {
-                    Icon(
+                    /*Icon(
                         imageVector = Icons.Rounded.Settings,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.primary,
@@ -77,19 +87,32 @@ fun ChampionListScreen(
                             .clickable {
                                 navigateToSettings()
                             }
-                    )
+                    )*/
+                    Box(
+                        modifier = Modifier
+                            .padding(16.dp)
+                    ) {
+                        IconButton(onClick = { expanded = !expanded }) {
+                            Icon(imageVector = Icons.Rounded.MoreVert, contentDescription = "More options")
+                        }
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text("Settings") },
+                                onClick = { navigateToSettings() }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("BookMarks") },
+                                onClick = { navigateToBookMarks()}
+                            )
+                        }
+                    }
 
                 }
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    navigateToBookMarks()
-                }
-            ) { Icon(Icons.Rounded.FavoriteBorder, null) }
-        },
-        floatingActionButtonPosition = FabPosition.End
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -149,7 +172,7 @@ fun ChampionCard(championList: Champion, navigateToDetail: (String) -> Unit) {
     ) {
 
         AsyncImage(
-            model = IMAGEURL + "${championList.id}_0.jpg",
+            model = IMAGE_URL + "${championList.id}_0.jpg",
             contentDescription = null,
             contentScale = ContentScale.FillWidth,
             modifier = Modifier

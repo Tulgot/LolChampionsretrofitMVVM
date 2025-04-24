@@ -1,7 +1,6 @@
 package com.tulgot.lol.data.datastore
 
 import android.content.Context
-import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
@@ -14,7 +13,7 @@ private val Context.dataStore by preferencesDataStore(name = SETTINGS_NAME)
 
 class DefaultDataStoreManager @Inject constructor(
     private val context: Context
-):DataStoreManager{
+) : DataStoreManager {
 
     override suspend fun putSettings(key: String, value: Boolean) {
         val preferencesKey = booleanPreferencesKey(key)
@@ -28,7 +27,7 @@ class DefaultDataStoreManager @Inject constructor(
             val preferenceKey = booleanPreferencesKey(key)
             val preferences = context.dataStore.data.first()
             preferences[preferenceKey]
-        }catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             null
         }
@@ -46,7 +45,7 @@ class DefaultDataStoreManager @Inject constructor(
             val preferenceKey = booleanPreferencesKey(key)
             val preferences = context.dataStore.data.first()
             preferences[preferenceKey]
-        }catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             null
         }

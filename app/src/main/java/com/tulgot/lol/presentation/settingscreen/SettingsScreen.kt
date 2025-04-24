@@ -1,7 +1,6 @@
 package com.tulgot.lol.presentation.settingscreen
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -30,17 +29,12 @@ import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import androidx.core.app.NotificationCompat.Style
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tulgot.lol.ui.theme.Typography
 
@@ -121,10 +115,10 @@ fun SettingsScreen(
                     .toggleable(
                         value = dataStoreViewModel.dataStoreCheckBox.value,
                         onValueChange = {
-                            if(it){
+                            if (it) {
                                 dataStoreViewModel.changeThemeSwitch(false)
                                 dataStoreViewModel.changeCheckBox(it)
-                            }else{
+                            } else {
                                 dataStoreViewModel.changeCheckBox(it)
                             }
                             //themeSwithcerTheme(content = content)
@@ -144,38 +138,38 @@ fun SettingsScreen(
 }
 
 
-    @RequiresApi(Build.VERSION_CODES.S)
-    @Composable
-    fun themeSwithcerTheme(
-        content: @Composable () -> Unit
-    ) {
+@RequiresApi(Build.VERSION_CODES.S)
+@Composable
+fun themeSwithcerTheme(
+    content: @Composable () -> Unit
+) {
 
-        val viewModel = hiltViewModel<DataStoreViewModel>()
-        val colorSchemeDataStore =
-            if (viewModel.dataStoreState.value) dynamicDarkColorScheme(LocalContext.current) else dynamicLightColorScheme(
-                LocalContext.current
+    val viewModel = hiltViewModel<DataStoreViewModel>()
+    val colorSchemeDataStore =
+        if (viewModel.dataStoreState.value) dynamicDarkColorScheme(LocalContext.current) else dynamicLightColorScheme(
+            LocalContext.current
+        )
+    val colorSchemeSystem =
+        if (isSystemInDarkTheme()) dynamicDarkColorScheme(LocalContext.current) else dynamicLightColorScheme(
+            LocalContext.current
+        )
+
+    when (viewModel.dataStoreCheckBox.value) {
+        true -> {
+            MaterialTheme(
+                colorScheme = colorSchemeSystem,
+                typography = Typography,
+                content = content
             )
-        val colorSchemeSystem =
-            if (isSystemInDarkTheme()) dynamicDarkColorScheme(LocalContext.current) else dynamicLightColorScheme(
-                LocalContext.current
-            )
-
-        when (viewModel.dataStoreCheckBox.value) {
-            true -> {
-                MaterialTheme(
-                    colorScheme = colorSchemeSystem,
-                    typography = Typography,
-                    content = content
-                )
-            }
-
-            false -> {
-                MaterialTheme(
-                    colorScheme = colorSchemeDataStore,
-                    typography = Typography,
-                    content = content
-                )
-            }
         }
 
+        false -> {
+            MaterialTheme(
+                colorScheme = colorSchemeDataStore,
+                typography = Typography,
+                content = content
+            )
+        }
     }
+
+}
