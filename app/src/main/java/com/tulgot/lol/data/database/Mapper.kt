@@ -1,8 +1,13 @@
 package com.tulgot.lol.data.database
 
 import com.tulgot.lol.data.database.entities.ChampionEntity
+import com.tulgot.lol.data.database.entities.PassiveEntity
+import com.tulgot.lol.data.database.entities.SpellEntity
 import com.tulgot.lol.domain.model.Champion
+import com.tulgot.lol.domain.model.Spell
 import com.tulgot.lol.domain.room.ChampionRoom
+import com.tulgot.lol.domain.room.PassiveRoom
+import com.tulgot.lol.domain.room.SpellRoom
 
 
 fun Champion.toChampionEntity() =
@@ -13,7 +18,6 @@ fun Champion.toChampionEntity() =
         name = name.toString(),
         key = key.toString(),
         lore = lore.toString(),
-        passive = passive.toString(),
         spells = spells.toString(),
         tags = tags.toString(),
         title = title.toString()
@@ -27,16 +31,29 @@ fun ChampionEntity.toChampionRoom() =
         name = name,
         key = key,
         lore = lore,
-        passive = passive,
         spells = spells,
         tags = tags,
         title = title
     )
 
-//val numbers = listOf(1, 2, 3, 4, 5, 6)
-//val snumbers = numbers.toString()
-//val lnumbers = "[1, 2, 3, 4, 5, 6]"
-//val ynumbers = lnumbers.substring(1, lnumbers.length-1)
-//val xnumbers = ynumbers.split(",").map { it.trim() }
-//val numberlist = xnumbers.toList()
-//println(numberlist[2])
+fun PassiveEntity.toPassiveRoom() =
+    PassiveRoom(
+        name = name,
+        description = description,
+        image = image
+    )
+
+fun SpellEntity.toSpellRoom() =
+    SpellRoom(
+        name = name,
+        description = description,
+        id = id,
+    )
+
+fun Spell.toSpellEntity(id: String) =
+    SpellEntity(
+        name = name.toString(),
+        description = description.toString(),
+        championid = id,
+        id = this.id.toString()
+    )

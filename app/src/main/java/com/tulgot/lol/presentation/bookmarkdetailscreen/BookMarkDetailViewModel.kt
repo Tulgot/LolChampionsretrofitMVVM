@@ -1,13 +1,14 @@
 package com.tulgot.lol.presentation.bookmarkdetailscreen
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.tulgot.lol.domain.room.ChampionRoom
+import com.tulgot.lol.domain.room.PassiveRoom
 import com.tulgot.lol.domain.room.RoomManager
+import com.tulgot.lol.domain.room.SpellRoom
 import com.tulgot.lol.presentation.BookMarksDetail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +19,7 @@ import javax.inject.Inject
 class BookMarkDetailViewModel @Inject constructor(
     private val roomManager: RoomManager,
     savedStateHandle: SavedStateHandle
-): ViewModel() {
+) : ViewModel() {
 
     init {
         val args = savedStateHandle.toRoute<BookMarksDetail>().id
@@ -31,31 +32,36 @@ class BookMarkDetailViewModel @Inject constructor(
     var taglist = mutableStateListOf<String>()
         private set
 
-    private fun getRoomChampionByID(args: String){
-        viewModelScope.launch(Dispatchers.IO) {
-            roomManager.getChampionById(args).let {
-                championDetail.addAll(it)
-                stringToList(it.first().tags)
-                stringToSpellList(it.first().spells)
-                stringToPassive(it.first().passive)
+    var passive = mutableStateListOf<PassiveRoom>()
+        private set
 
+    var spell = mutableStateListOf<SpellRoom>()
+        private set
+
+    private fun getRoomChampionByID(args: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (roomManager.getChampionById(args).isNotEmpty()) {
+                roomManager.getChampionById(args).let {
+                    championDetail.addAll(it)
+                    stringToList(it.first().tags)
+
+                }
+                roomManager.getPassiveByChampionName(args).let {
+                    passive.add(it)
+                }
+                roomManager.getSpellByChampionName(args).let {
+                    spell.addAll(it)
+                }
             }
         }
     }
 
-    private fun stringToList(tags: String){
-        val stringmodification = tags.substring(1, tags.length-1)
+    private fun stringToList(tags: String) {
+        val stringmodification = tags.substring(1, tags.length - 1)
         val splitstring = stringmodification.split(",").map { it.trim() }
         val listofstrings = splitstring.toList()
         taglist.addAll(listofstrings)
     }
 
-    private fun stringToSpellList(spell: String){
-        Log.i("TAG", "stringToSpellList: ${spell}")
-    }
-
-    private fun stringToPassive(passive: String){
-        Log.i("TAG", "stringToPassive: ${passive}")
-    }
 
 }

@@ -35,19 +35,20 @@ class ChampionDetailsViewModel @Inject constructor(
 
         val args = savedStateHandle.toRoute<ChampionDetails>().name
         loadChampionDetails(args)
-        getRoomChampionById(args)
 
     }
 
     fun championRoom() {
-        insertChampion()
+        insertDB()
     }
 
-    private fun insertChampion() {
+    private fun insertDB() {
         viewModelScope.launch(Dispatchers.IO) {
-            val xyz = _championDetailsState.value.championDetails?.data?.first()
+            val championDetail = _championDetailsState.value.championDetails?.data?.first()
             try {
-                roomManager.insertChampionDetail(xyz!!)
+                roomManager.insertChampionDetail(championDetail!!)
+                roomManager.insertPassive(championDetail.passive!!, championDetail.name.toString())
+                roomManager.insertSpell(championDetail.spells!!, championDetail.name.toString())
             } catch (e: Exception) {
                 e.stackTraceToString()
             }
@@ -56,9 +57,8 @@ class ChampionDetailsViewModel @Inject constructor(
 
     private fun getRoomChampionById(args: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            when (roomManager.getChampionById(args).size == 0) {
-                true -> checkDB.value = true
-                false -> checkDB.value = false
+            if (roomManager.getChampionById(args).isNotEmpty()) {
+                checkDB.value = false
             }
         }
     }
@@ -88,7 +88,9 @@ class ChampionDetailsViewModel @Inject constructor(
                         state = UiStates.SUCCESS
                     )
                 }
+                getRoomChampionById(name)
             }
+
         }
     }
 }

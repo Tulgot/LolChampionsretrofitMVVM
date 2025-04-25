@@ -13,7 +13,6 @@ data class ChampionEntity(
     @ColumnInfo(name = "key") val key: String,
     @ColumnInfo(name = "lore") val lore: String,
     @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "passive") val passive: String,
     @ColumnInfo(name = "spells") val spells: String,
     @ColumnInfo(name = "tags") val tags:  String,
     @ColumnInfo(name = "title") val title: String
