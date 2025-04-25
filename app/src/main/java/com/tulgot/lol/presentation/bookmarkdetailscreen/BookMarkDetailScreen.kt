@@ -149,7 +149,7 @@ fun BookMarkDetailScreen(
                             contentAlignment = Alignment.TopEnd
                         ) {
                             AsyncImage(
-                                model = SQUARE_ASSET + "${bookMarkDetailViewModel.championDetail.first()?.id}.png",
+                                model = SQUARE_ASSET + "${bookMarkDetailViewModel.championDetail.first().id}.png",
                                 contentDescription = null,
 
                                 modifier = Modifier
@@ -166,7 +166,7 @@ fun BookMarkDetailScreen(
                     )
                     Text(
                         text = bookMarkDetailViewModel.championDetail.first().title?.first()
-                            ?.uppercase() + bookMarkDetailViewModel.championDetail.first()?.title?.drop(
+                            ?.uppercase() + bookMarkDetailViewModel.championDetail.first().title?.drop(
                             1
                         ),
                         fontSize = 20.sp
