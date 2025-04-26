@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "2612738654",
+    "project_id": "lolapp-44def",
+    "storage_bucket": "lolapp-44def.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:2612738654:android:9118a0aeb71b49c3bdd2cf",
+        "android_client_info": {
+          "package_name": "com.tulgot.lol"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4q21j2a6pSgMNyfNpebWH6nTJb1PZQ88"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

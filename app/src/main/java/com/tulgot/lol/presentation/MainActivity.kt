@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.tulgot.lol.modules.login.presentation.ui.LoginScreen
 import com.tulgot.lol.presentation.bookmarkdetailscreen.BookMarkDetailScreen
 import com.tulgot.lol.presentation.bookmarksscreen.BookMarksScreen
 import com.tulgot.lol.presentation.championdetailscreen.ChampionDetailsScreen
@@ -28,12 +29,15 @@ class MainActivity : ComponentActivity() {
 
                 val navController = rememberNavController()
 
-                NavHost(navController = navController, startDestination = ChampionList) {
+                NavHost(navController = navController, startDestination = Login) {
+                    composable<Login> {
+                        LoginScreen()
+                    }
                     composable<ChampionList> {
                         ChampionListScreen(
                             navigateToDetail = { name ->
-                                navController.navigate( ChampionDetails( name = name ) )
-                                               },
+                                navController.navigate(ChampionDetails(name = name))
+                            },
                             navigateToSettings = { navController.navigate(Settings) },
                             navigateToBookMarks = { navController.navigate(BookMarks) }
                         )
@@ -46,34 +50,34 @@ class MainActivity : ComponentActivity() {
                             navigateToChampionList = { navController.navigate(ChampionList) }
                         )
                     }
-                        composable<Settings> {
-                            SettingsScreen(
-                                navigateToChampionList = { navController.navigate(ChampionList) },
-                                navigateToBookMarks = { navController.navigate(BookMarks) }
-                            )
-                        }
+                    composable<Settings> {
+                        SettingsScreen(
+                            navigateToChampionList = { navController.navigate(ChampionList) },
+                            navigateToBookMarks = { navController.navigate(BookMarks) }
+                        )
+                    }
 
-                        composable<BookMarks> {
-                            BookMarksScreen(
-                                navigateToChampionList = { navController.navigate(ChampionList) },
-                                navigateToSettings = { navController.navigate(Settings) },
-                                navigateToBookMarsDetail = {
-                                    navController.navigate(BookMarksDetail(id = it))
-                                }
-                            )
-                        }
+                    composable<BookMarks> {
+                        BookMarksScreen(
+                            navigateToChampionList = { navController.navigate(ChampionList) },
+                            navigateToSettings = { navController.navigate(Settings) },
+                            navigateToBookMarsDetail = {
+                                navController.navigate(BookMarksDetail(id = it))
+                            }
+                        )
+                    }
                     composable<BookMarksDetail> {
-                            BookMarkDetailScreen(
-                                navigateToChampionList = { navController.navigate(ChampionList) },
-                                navigateToSettings = { navController.navigate(Settings) },
-                                navigateToBookMarks = { navController.navigate(BookMarks)}
-                            )
-                        }
-
+                        BookMarkDetailScreen(
+                            navigateToChampionList = { navController.navigate(ChampionList) },
+                            navigateToSettings = { navController.navigate(Settings) },
+                            navigateToBookMarks = { navController.navigate(BookMarks) }
+                        )
                     }
 
                 }
 
             }
+
         }
     }
+}

@@ -4,6 +4,7 @@ plugins {
     kotlin("kapt")
     alias(libs.plugins.hilt)
     alias(libs.plugins.jetbrainsKotlinSerialization)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -12,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.tulgot.lol"
-        minSdk = 24
+        minSdk = 29
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -55,17 +56,37 @@ android {
 dependencies {
 
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
+
+    //Compose
+    implementation(libs.compose.activity)
+    implementation(libs.compose.uitooling)
+    implementation(libs.compose.ui.ui)
+    implementation(libs.compose.ui.graphics)
+    implementation(libs.compose.ui.util)
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.material)
+    implementation(libs.compose.icons.extended)
+    implementation(libs.compose.runtime.live.data)
+    implementation(libs.compose.lifecycle.view.model)
+    implementation(libs.compose.material3)
+    implementation(libs.compose.material3.window)
+    implementation(libs.compose.material3.adaptive.navigation.suite)
+    implementation(libs.accompanist.drawablepainter)
+    implementation(libs.accompanist.systemuicontroller)
+    implementation(libs.androidx.lifecycle.runtime.compose)
 
     // Hilt (dagger/hilt)
     implementation(libs.dagger.hilt)
     implementation(libs.dagger.hilt.navigation)
+    implementation(project(":core"))
+    implementation(libs.firebase.auth)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
     kapt(libs.dagger.hilt.compiler)
 
     // Coil (Image Loader)
@@ -98,5 +119,9 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    //Firebase
+    implementation(platform("com.google.firebase:firebase-bom:33.12.0"))
+    implementation("com.google.firebase:firebase-analytics")
 
 }
