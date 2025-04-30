@@ -12,7 +12,7 @@ import com.tulgot.lol.data.database.entities.SpellEntity
     PassiveEntity::class,
     SpellEntity::class
                      ],
-    version = 1)
+    version = 1, exportSchema = false)
 abstract class ChampionDatabase: RoomDatabase() {
 
     abstract fun getChampionDao(): ChampionDao

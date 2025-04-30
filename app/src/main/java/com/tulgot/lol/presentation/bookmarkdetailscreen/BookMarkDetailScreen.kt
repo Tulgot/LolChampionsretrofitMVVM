@@ -47,8 +47,8 @@ import com.tulgot.lol.domain.PASSIVE_ASSET
 import com.tulgot.lol.domain.SPELL_ASSET
 import com.tulgot.lol.domain.SPLASH_ASSET
 import com.tulgot.lol.domain.SQUARE_ASSET
-import com.tulgot.lol.domain.room.PassiveRoom
-import com.tulgot.lol.domain.room.SpellRoom
+import com.tulgot.lol.domain.room.model.PassiveRoom
+import com.tulgot.lol.domain.room.model.SpellRoom
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

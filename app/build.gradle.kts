@@ -83,11 +83,15 @@ dependencies {
     implementation(libs.dagger.hilt)
     implementation(libs.dagger.hilt.navigation)
     implementation(project(":core"))
+    kapt(libs.dagger.hilt.compiler)
+
+    //Firebase Google Auth
     implementation(libs.firebase.auth)
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
-    kapt(libs.dagger.hilt.compiler)
+    implementation(platform(libs.firebase.bom))
+
 
     // Coil (Image Loader)
     implementation(libs.coil.compose)
@@ -119,9 +123,5 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
-    //Firebase
-    implementation(platform("com.google.firebase:firebase-bom:33.12.0"))
-    implementation("com.google.firebase:firebase-analytics")
 
 }

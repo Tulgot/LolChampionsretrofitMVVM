@@ -1,4 +1,4 @@
-package com.tulgot.lol.domain.room
+package com.tulgot.lol.domain.room.model
 
 import com.google.gson.annotations.SerializedName
 

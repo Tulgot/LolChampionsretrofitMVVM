@@ -5,10 +5,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.tulgot.lol.domain.room.ChampionRoom
-import com.tulgot.lol.domain.room.PassiveRoom
+import com.tulgot.lol.domain.room.model.ChampionRoom
+import com.tulgot.lol.domain.room.model.PassiveRoom
 import com.tulgot.lol.domain.room.RoomManager
-import com.tulgot.lol.domain.room.SpellRoom
+import com.tulgot.lol.domain.room.model.SpellRoom
 import com.tulgot.lol.presentation.BookMarksDetail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

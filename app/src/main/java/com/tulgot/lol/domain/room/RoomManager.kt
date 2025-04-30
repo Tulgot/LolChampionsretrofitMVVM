@@ -3,6 +3,9 @@ package com.tulgot.lol.domain.room
 import com.tulgot.lol.domain.model.Champion
 import com.tulgot.lol.domain.model.Passive
 import com.tulgot.lol.domain.model.Spell
+import com.tulgot.lol.domain.room.model.ChampionRoom
+import com.tulgot.lol.domain.room.model.PassiveRoom
+import com.tulgot.lol.domain.room.model.SpellRoom
 
 interface RoomManager {
 

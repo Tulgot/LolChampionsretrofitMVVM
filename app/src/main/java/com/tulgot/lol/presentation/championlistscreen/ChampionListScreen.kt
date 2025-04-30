@@ -1,6 +1,5 @@
 package com.tulgot.lol.presentation.championlistscreen
 
-import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -47,7 +46,6 @@ import com.tulgot.lol.domain.IMAGE_URL
 import com.tulgot.lol.domain.model.Champion
 import com.tulgot.lol.domain.network.UiStates
 
-@SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChampionListScreen(
@@ -60,7 +58,9 @@ fun ChampionListScreen(
     val championListResult by championListViewModel.championListState.collectAsState()
     val championList = championListResult.championList?.data?.toList()
     val context = LocalContext.current
-    var expanded by remember { mutableStateOf(false) }
+    var expanded by remember{ mutableStateOf(false) }
+
+
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -79,7 +79,10 @@ fun ChampionListScreen(
                             .padding(16.dp)
                     ) {
                         IconButton(onClick = { expanded = !expanded }) {
-                            Icon(imageVector = Icons.Rounded.MoreVert, contentDescription = "More options")
+                            Icon(
+                                imageVector = Icons.Rounded.MoreVert,
+                                contentDescription = "More options"
+                            )
                         }
                         DropdownMenu(
                             expanded = expanded,
@@ -188,4 +191,3 @@ fun ChampionCard(championList: Champion, navigateToDetail: (String) -> Unit) {
 
     }
 }
-

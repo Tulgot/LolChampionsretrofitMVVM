@@ -3,7 +3,7 @@ package com.tulgot.lol.presentation.bookmarksscreen
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tulgot.lol.domain.room.ChampionRoom
+import com.tulgot.lol.domain.room.model.ChampionRoom
 import com.tulgot.lol.domain.room.RoomManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

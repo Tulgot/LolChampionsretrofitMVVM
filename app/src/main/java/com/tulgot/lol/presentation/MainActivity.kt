@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -17,6 +18,7 @@ import com.tulgot.lol.presentation.championlistscreen.ChampionListScreen
 import com.tulgot.lol.presentation.settingscreen.SettingsScreen
 import com.tulgot.lol.ui.theme.LOLTheme
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -24,14 +26,14 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val appContext = applicationContext
         setContent {
             LOLTheme {
 
                 val navController = rememberNavController()
-
                 NavHost(navController = navController, startDestination = Login) {
                     composable<Login> {
-                        LoginScreen()
+                        LoginScreen(appContext)
                     }
                     composable<ChampionList> {
                         ChampionListScreen(

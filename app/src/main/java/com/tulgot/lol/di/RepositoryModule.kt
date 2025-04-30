@@ -22,4 +22,5 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindRoomManager(defaulRoomManager: DefaultRoomManager): RoomManager
+
 }

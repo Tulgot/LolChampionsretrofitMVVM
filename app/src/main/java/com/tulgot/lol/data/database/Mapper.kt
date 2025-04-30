@@ -5,9 +5,9 @@ import com.tulgot.lol.data.database.entities.PassiveEntity
 import com.tulgot.lol.data.database.entities.SpellEntity
 import com.tulgot.lol.domain.model.Champion
 import com.tulgot.lol.domain.model.Spell
-import com.tulgot.lol.domain.room.ChampionRoom
-import com.tulgot.lol.domain.room.PassiveRoom
-import com.tulgot.lol.domain.room.SpellRoom
+import com.tulgot.lol.domain.room.model.ChampionRoom
+import com.tulgot.lol.domain.room.model.PassiveRoom
+import com.tulgot.lol.domain.room.model.SpellRoom
 
 
 fun Champion.toChampionEntity() =
