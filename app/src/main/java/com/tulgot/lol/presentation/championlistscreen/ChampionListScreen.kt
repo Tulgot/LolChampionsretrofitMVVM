@@ -52,14 +52,13 @@ fun ChampionListScreen(
     championListViewModel: ChampionListViewModel = hiltViewModel(),
     navigateToDetail: (String) -> Unit,
     navigateToSettings: () -> Unit,
-    navigateToBookMarks: () -> Unit
+    navigateToBookMarks: () -> Unit,
 ) {
 
     val championListResult by championListViewModel.championListState.collectAsState()
     val championList = championListResult.championList?.data?.toList()
     val context = LocalContext.current
     var expanded by remember{ mutableStateOf(false) }
-
 
 
     Scaffold(

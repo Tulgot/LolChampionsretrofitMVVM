@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 
 class LolChampionsRepositoryImpl @Inject constructor(
-    private val lolApi: LolApi,
+    private val lolApi: LolApi
 ) : LolChampionsRepository {
 
     override suspend fun getAllChampions(): Flow<ChampionResponse> {

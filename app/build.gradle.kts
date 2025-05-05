@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -23,8 +25,22 @@ android {
             useSupportLibrary = true
         }
     }
+    buildFeatures {
+        buildConfig = true
+    }
 
     buildTypes {
+        debug {
+            val key = gradleLocalProperties(rootDir, providers).getProperty("AUTHENTICATION_WEB_CLIENT_ID")
+            buildConfigField("String", "AUTHENTICATION_WEB_CLIENT_ID", key)
+
+
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(

@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChampionListViewModel @Inject constructor(
-    private val lolChampionsRepository: LolChampionsRepository,
+    private val lolChampionsRepository: LolChampionsRepository
 ) : ViewModel() {
 
     private var _championListState = MutableStateFlow(ChampionListState())

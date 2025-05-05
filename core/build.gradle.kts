@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.tulgot.lol.core"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 29

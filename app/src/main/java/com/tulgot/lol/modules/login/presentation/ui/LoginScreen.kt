@@ -1,18 +1,21 @@
 package com.tulgot.lol.modules.login.presentation.ui
 
-import android.content.Context
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -24,113 +27,85 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.credentials.CredentialManager
-import androidx.credentials.GetCredentialRequest
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.tulgot.lol.R
 import com.tulgot.lol.core.components.EditTextTopLabel
 
 @Composable
-fun LoginScreen(context: Context) {
+fun LoginScreen(
+    navigateToChampionList: () -> Unit,
+    loginViewModel: LoginViewModel = hiltViewModel()
+) {
+    LaunchedEffect(Unit) {
+        if (FirebaseAuth.getInstance().currentUser != null)
+            navigateToChampionList()
+    }
 
     var email by rememberSaveable { mutableStateOf("") }
     var psw by rememberSaveable { mutableStateOf("") }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 50.dp)
-    ) {
-        Spacer(Modifier.height(40.dp))
-        Text(text = "User:",
-            Modifier
-                .fillMaxWidth(0.80f)
-                .align(Alignment.CenterHorizontally), style = TextStyle(
-            fontSize = 24.sp,
-            color = Color.Black,
-            fontWeight = FontWeight.Bold
-        ))
-        EditTextTopLabel(onValueChange = {
-            email = it
-        }, value = email, modifier = Modifier
-            .fillMaxWidth(0.80f)
-            .align(Alignment.CenterHorizontally))
-        Spacer(Modifier.height(20.dp))
-        Text("Password:",
-            Modifier
-                .fillMaxWidth(0.80f)
-                .align(Alignment.CenterHorizontally), style = TextStyle(
-                fontSize = 24.sp,
-                color = Color.Black,
-                fontWeight = FontWeight.Bold
-            ))
-        EditTextTopLabel(onValueChange = {
-            psw = it
-        }, value = psw, modifier = Modifier
-            .fillMaxWidth(0.80f)
-            .align(Alignment.CenterHorizontally))
+    Box(Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(0.8f)
+                .fillMaxHeight()
+                .padding(top = 50.dp)
+                .align(Alignment.Center),
+        ) {
+            Spacer(Modifier.height(40.dp))
+            Titles("User: ", email) { email = it }
+            Spacer(Modifier.height(20.dp))
+            Titles("Password: ", psw) { psw = it }
 
 
-        Button(modifier = Modifier
-            .padding(top = 50.dp)
-            .fillMaxWidth(0.80f)
-            .align(Alignment.CenterHorizontally)
-            .height(50.dp),
-            onClick = {
+            Button(modifier = Modifier
+                .padding(top = 50.dp)
+                .height(50.dp)
+                .fillMaxWidth(),
+                onClick = {
+                    loginViewModel.start()
+                }) {
+                Text("Iniciar sesion")
+            }
 
-            }) {
-            Text("Iniciar sesion")
-        }
-
-        Button(modifier = Modifier
-            .padding(top = 30.dp)
-            .fillMaxWidth(0.80f)
-            .align(Alignment.CenterHorizontally)
-            .height(50.dp),
-            onClick = {
-               val googleIdOption = GetGoogleIdOption.Builder()
-                    .setFilterByAuthorizedAccounts(true)
-                    .setServerClientId(R.string.default_web_client_id.toString())//TODO fix here
-                    .build()
-
-                val request = GetCredentialRequest.Builder()
-                    .addCredentialOption(googleIdOption)
-                    .build()
-
-
-
-
-
-               /*val request = GetCredentialRequest.Builder()
-                    .addCredentialOption(
-                        GetGoogleIdOption.Builder().setFilterByAuthorizedAccounts(false)
-                            .setServerClientId(
-                                R.string.default_web_client_id.toString()
-                            ).setAutoSelectEnabled(false).build()
-                    ).build()*/
-
-
-
-            }) {
-            Text("Iniciar sesion con Google")
-            Spacer(Modifier.width(10.dp))
-            Image(
-                modifier = Modifier
-                    .size(40.dp),
-                painter = painterResource(id = R.drawable.icon_google),
-                contentDescription = null,
-                contentScale = ContentScale.Fit,
+            Button(modifier = Modifier
+                .padding(top = 30.dp)
+                .height(50.dp)
+                .fillMaxWidth(),
+                onClick = {
+                    loginViewModel.start()
+                }) {
+                Text("Iniciar sesion con Google")
+                Spacer(Modifier.width(10.dp))
+                Image(
+                    modifier = Modifier
+                        .size(40.dp),
+                    painter = painterResource(id = R.drawable.icon_google),
+                    contentDescription = null,
+                    contentScale = ContentScale.Fit,
                 )
+            }
         }
     }
 
 }
 
-@Preview(showSystemUi = true)
 @Composable
-fun LoginScreenPreview() {
+fun Titles(title: String, value: String, onValueChange: (String) -> Unit) {
+    Column(Modifier.wrapContentHeight()) {
+        Text(
+            text = title,
+            style = TextStyle(
+                fontSize = 24.sp,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold
+            )
+        )
+        EditTextTopLabel(
+            value = value, onValueChange = onValueChange
+        )
+    }
 }
