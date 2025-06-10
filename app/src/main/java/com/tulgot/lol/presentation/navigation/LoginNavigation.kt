@@ -25,7 +25,9 @@ fun LoginNavigation(){
             composable<LoginRoute> {
                 LaunchedEffect(Unit) {
                     if (FirebaseAuth.getInstance().currentUser != null)
-                        navController.navigate(HomeGraph)
+                        navController.navigate(HomeGraph){
+                            popUpTo(route = SignInGraph) { inclusive = true }
+                        }
                 }
                 LoginScreen(
                     navigateToChampionList = {

@@ -50,16 +50,10 @@ import com.tulgot.lol.presentation.bookmarkdetailscreen.BookMarkDetailScreen
 import com.tulgot.lol.presentation.bookmarksscreen.BookMarksScreen
 import com.tulgot.lol.presentation.championdetailscreen.ChampionDetailsScreen
 import com.tulgot.lol.presentation.championlistscreen.ChampionListScreen
+import com.tulgot.lol.presentation.listRoute
 import com.tulgot.lol.presentation.mapscreen.MapScreen
 import com.tulgot.lol.presentation.settingscreen.SettingsScreen
 
-enum class BottomNavigationScreen {
-    ChampionListRoute,
-    BookMarksRoute,
-    SettingsRoute,
-    ProfileRoute,
-    GoogleMapRoute
-}
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
@@ -99,32 +93,22 @@ fun AppNavigation() {
     val navController = rememberNavController()
 
     navController.addOnDestinationChangedListener { controller, destination, arguments ->
-        repeat(BottomNavigationScreen.entries.size) {
-            if (destination.route.toString()
-                    .substringAfterLast(".") == BottomNavigationScreen.entries[it].name
-            ) {
-                selectedItemIndex = it
-
-            }
+        selectedItemIndex = listRoute.indexOfFirst {
+            it.toString().substringAfterLast('.')
+                .substringBefore('@') == destination.route.toString()
+                .substringAfterLast(".")
         }
     }
+
 
     Scaffold(
         bottomBar = {
             NavigationBar {
                 items.forEachIndexed { index, item ->
-
                     NavigationBarItem(
                         selected = selectedItemIndex == index,
                         onClick = {
-                            selectedItemIndex = index
-                            when (selectedItemIndex) {
-                                0 -> navController.navigate(ChampionListRoute)
-                                1 -> navController.navigate(BookMarksRoute)
-                                2 -> navController.navigate(SettingsRoute)
-                                3 -> navController.navigate(ProfileRoute)
-                                4 -> navController.navigate(GoogleMapRoute)
-                            }
+                            navController.navigate(listRoute[index])
                         },
                         label = {
                             Text(text = item.title)
@@ -187,8 +171,12 @@ fun AppNavigation() {
                         }
                         composable<ProfileRoute> {
                             LaunchedEffect(Unit) {
-                                if (FirebaseAuth.getInstance().currentUser == null)
-                                    navController.navigate(LoginRoute)
+                                if (FirebaseAuth.getInstance().currentUser == null) {
+                                    navController.navigate(LoginRoute){
+                                        popUpTo(route = HomeGraph) { inclusive = true }
+                                    }
+                                }
+
                             }
                             ProfileScreen(
                                 navigateToLogIn = {

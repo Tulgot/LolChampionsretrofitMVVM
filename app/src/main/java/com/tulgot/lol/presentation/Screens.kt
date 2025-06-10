@@ -21,6 +21,9 @@ import kotlinx.serialization.Serializable
 @Serializable object ProfileRoute
 @Serializable object GoogleMapRoute
 
+val listRoute =
+    listOf(ChampionListRoute, BookMarksRoute, SettingsRoute, ProfileRoute, GoogleMapRoute)
+
 
 
 
