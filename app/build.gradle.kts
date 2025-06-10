@@ -29,10 +29,15 @@ android {
         buildConfig = true
     }
 
+
     buildTypes {
         debug {
             val key = gradleLocalProperties(rootDir, providers).getProperty("AUTHENTICATION_WEB_CLIENT_ID")
             buildConfigField("String", "AUTHENTICATION_WEB_CLIENT_ID", key)
+
+            val googlekey = gradleLocalProperties(rootDir, providers).getProperty("GOOGLE_MAPS_API_KEY")
+            //buildConfigField("String", "GOOGLE_MAPS_API_KEY", googlekey)
+            resValue("string", "GOOGLE_MAPS_API_KEY", googlekey)
 
 
             isMinifyEnabled = false
@@ -107,6 +112,7 @@ dependencies {
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
     implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth.ktx)
 
 
     // Coil (Image Loader)
@@ -131,6 +137,9 @@ dependencies {
     implementation("androidx.room:room-ktx:2.4.3")
     kapt("androidx.room:room-compiler:2.4.3")
 
+    //Google Maps
+    implementation(libs.google.play.services.maps)
+    implementation(libs.google.maps.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

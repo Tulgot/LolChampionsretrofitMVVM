@@ -63,15 +63,10 @@ import com.tulgot.lol.domain.network.UiStates
 @Composable
 fun ChampionDetailsScreen(
     championDetailsViewModel: ChampionDetailsViewModel = hiltViewModel(),
-    navigateToSettings: () -> Unit,
-    navigateToBooKMarks: () -> Unit,
-    navigateToChampionList: () -> Unit
 ) {
 
     val championDetailsResult by championDetailsViewModel.championDetailsState.collectAsState()
     val details = championDetailsResult.championDetails?.data?.firstOrNull()
-    var expanded by remember { mutableStateOf(false) }
-
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -83,37 +78,6 @@ fun ChampionDetailsScreen(
                 ),
                 title = {
                     Text(details?.name.toString())
-                },
-                actions = {
-                    Box(
-                        modifier = Modifier
-                            .padding(16.dp)
-                    ) {
-                        IconButton(onClick = { expanded = !expanded }) {
-                            Icon(
-                                imageVector = Icons.Rounded.MoreVert,
-                                contentDescription = "More options"
-                            )
-                        }
-                        DropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false }
-                        ) {
-                            DropdownMenuItem(
-                                text = { Text("Settings") },
-                                onClick = { navigateToSettings() }
-                            )
-                            DropdownMenuItem(
-                                text = { Text("BookMarks") },
-                                onClick = { navigateToBooKMarks() }
-                            )
-                            DropdownMenuItem(
-                                text = { Text("Champion List") },
-                                onClick = { navigateToChampionList() }
-                            )
-                        }
-                    }
-
                 }
             )
 
@@ -158,7 +122,7 @@ fun ChampionDetailsScreen(
 
                 Box(
                     modifier = Modifier
-                        .padding(innerPadding)
+                        .padding(top = innerPadding.calculateTopPadding())
                         .fillMaxSize()
                 ) {
                     ChampionDetailCard(details)

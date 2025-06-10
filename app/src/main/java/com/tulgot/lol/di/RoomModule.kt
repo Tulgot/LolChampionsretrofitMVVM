@@ -23,4 +23,5 @@ object RoomModule {
     @Singleton
     @Provides
     fun provideDao(db: ChampionDatabase) = db.getChampionDao()
+
 }

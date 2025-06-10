@@ -2,20 +2,32 @@ package com.tulgot.lol.presentation
 
 import kotlinx.serialization.Serializable
 
-@Serializable
-object Login
+//Login
+@Serializable object SignInGraph
 
-@Serializable
-object ChampionList
+//Login Graph
+@Serializable object LoginRoute
+@Serializable object RegistrationRoute
 
-@Serializable
-data class ChampionDetails(val name: String)
+//App
+@Serializable object HomeGraph
 
-@Serializable
-object Settings
+//APP Graph
+@Serializable object ChampionListRoute
+@Serializable data class ChampionDetailsRoute(val name: String)
+@Serializable object BookMarksRoute
+@Serializable data class BookMarksDetailRoute(val id: String)
+@Serializable object SettingsRoute
+@Serializable object ProfileRoute
+@Serializable object GoogleMapRoute
 
-@Serializable
-object BookMarks
 
-@Serializable
-data class BookMarksDetail(val id: String)
+
+
+
+
+
+
+
+
+

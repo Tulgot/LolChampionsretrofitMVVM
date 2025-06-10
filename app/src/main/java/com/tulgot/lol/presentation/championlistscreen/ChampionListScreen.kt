@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -51,15 +52,11 @@ import com.tulgot.lol.domain.network.UiStates
 fun ChampionListScreen(
     championListViewModel: ChampionListViewModel = hiltViewModel(),
     navigateToDetail: (String) -> Unit,
-    navigateToSettings: () -> Unit,
-    navigateToBookMarks: () -> Unit,
 ) {
 
     val championListResult by championListViewModel.championListState.collectAsState()
     val championList = championListResult.championList?.data?.toList()
     val context = LocalContext.current
-    var expanded by remember{ mutableStateOf(false) }
-
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -71,33 +68,6 @@ fun ChampionListScreen(
                 ),
                 title = {
                     Text("Champions")
-                },
-                actions = {
-                    Box(
-                        modifier = Modifier
-                            .padding(16.dp)
-                    ) {
-                        IconButton(onClick = { expanded = !expanded }) {
-                            Icon(
-                                imageVector = Icons.Rounded.MoreVert,
-                                contentDescription = "More options"
-                            )
-                        }
-                        DropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false }
-                        ) {
-                            DropdownMenuItem(
-                                text = { Text("Settings") },
-                                onClick = { navigateToSettings() }
-                            )
-                            DropdownMenuItem(
-                                text = { Text("BookMarks") },
-                                onClick = { navigateToBookMarks() }
-                            )
-                        }
-                    }
-
                 }
             )
         }
@@ -105,9 +75,8 @@ fun ChampionListScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = 20.dp)
-                .padding(top = 10.dp),
+                .padding(top = innerPadding.calculateTopPadding())
+                .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             when (championListResult.state) {
@@ -155,7 +124,7 @@ fun ChampionCard(championList: Champion, navigateToDetail: (String) -> Unit) {
     Row(
         modifier = Modifier.clickable {
             navigateToDetail(name)
-        },
+        }.padding(top = 10.dp, bottom = 10.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
     ) {
 

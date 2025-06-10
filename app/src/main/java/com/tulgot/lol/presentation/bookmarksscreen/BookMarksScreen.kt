@@ -43,14 +43,11 @@ import com.tulgot.lol.domain.IMAGE_URL
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookMarksScreen(
-    navigateToChampionList: () -> Unit,
-    navigateToSettings: () -> Unit,
     navigateToBookMarsDetail: (String) -> Unit,
     bookMarkViewModel: BookMarkViewModel = hiltViewModel()
 ) {
 
     val championList = bookMarkViewModel.championList
-    var expanded by remember { mutableStateOf(false) }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -61,44 +58,15 @@ fun BookMarksScreen(
                 ),
                 title = {
                     Text("BookMarked Champions")
-                },
-                actions = {
-                    Box(
-                        modifier = Modifier
-                            .padding(16.dp)
-                    ) {
-                        IconButton(onClick = { expanded = !expanded }) {
-                            Icon(
-                                imageVector = Icons.Rounded.MoreVert,
-                                contentDescription = "More options"
-                            )
-                        }
-                        DropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false }
-                        ) {
-                            DropdownMenuItem(
-                                text = { Text("Settings") },
-                                onClick = { navigateToSettings() }
-                            )
-                            DropdownMenuItem(
-                                text = { Text("Champion List") },
-                                onClick = { navigateToChampionList() }
-                            )
-                        }
-                    }
-
                 }
             )
         }
     ) { innerPadding ->
         Column(
             modifier = Modifier
-                .padding(innerPadding)
+                .padding(top = innerPadding.calculateTopPadding())
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp)
-                .padding(top = 10.dp)
-                .wrapContentHeight(),
         ) {
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -107,7 +75,7 @@ fun BookMarksScreen(
                     Row(
                         modifier = Modifier.clickable {
                             navigateToBookMarsDetail(championList[it].id.toString())
-                        },
+                        }.padding(top = 10.dp, bottom = 10.dp),
                         horizontalArrangement = Arrangement.spacedBy(10.dp),
                     ) {
                         AsyncImage(

@@ -9,7 +9,7 @@ import androidx.navigation.toRoute
 import com.tulgot.lol.domain.LolChampionsRepository
 import com.tulgot.lol.domain.network.UiStates
 import com.tulgot.lol.domain.room.RoomManager
-import com.tulgot.lol.presentation.ChampionDetails
+import com.tulgot.lol.presentation.ChampionDetailsRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,7 +33,7 @@ class ChampionDetailsViewModel @Inject constructor(
 
     init {
 
-        val args = savedStateHandle.toRoute<ChampionDetails>().name
+        val args = savedStateHandle.toRoute<ChampionDetailsRoute>().name
         loadChampionDetails(args)
 
     }

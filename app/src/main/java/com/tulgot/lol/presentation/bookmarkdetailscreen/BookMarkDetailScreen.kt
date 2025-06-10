@@ -53,13 +53,8 @@ import com.tulgot.lol.domain.room.model.SpellRoom
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookMarkDetailScreen(
-    navigateToChampionList: () -> Unit,
-    navigateToSettings: () -> Unit,
-    navigateToBookMarks: () -> Unit,
     bookMarkDetailViewModel: BookMarkDetailViewModel = hiltViewModel()
 ) {
-
-    var expanded by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier.fillMaxWidth(),
@@ -71,36 +66,6 @@ fun BookMarkDetailScreen(
                 ),
                 title = {
                     Text(bookMarkDetailViewModel.championDetail.first().name.toString())
-                },
-                actions = {
-                    Box(
-                        modifier = Modifier
-                            .padding(16.dp)
-                    ) {
-                        IconButton(onClick = { expanded = !expanded }) {
-                            Icon(
-                                imageVector = Icons.Rounded.MoreVert,
-                                contentDescription = "More options"
-                            )
-                        }
-                        DropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false }
-                        ) {
-                            DropdownMenuItem(
-                                text = { Text("Settings") },
-                                onClick = { navigateToSettings() }
-                            )
-                            DropdownMenuItem(
-                                text = { Text("Champion List") },
-                                onClick = { navigateToChampionList() }
-                            )
-                            DropdownMenuItem(
-                                text = { Text("BookMarks") },
-                                onClick = { navigateToBookMarks() }
-                            )
-                        }
-                    }
                 }
             )
         }
@@ -108,7 +73,7 @@ fun BookMarkDetailScreen(
 
         Box(
             modifier = Modifier
-                .padding(innerPadding)
+                .padding(top = innerPadding.calculateTopPadding())
                 .fillMaxSize()
         ) {
 

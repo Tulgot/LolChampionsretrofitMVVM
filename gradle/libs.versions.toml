@@ -29,6 +29,8 @@ accompanistDrawablepainter = "0.35.0-alpha"
 credentialsPlayServicesAuth = "1.5.0"
 googleid = "1.1.1"
 firebase-bom = "33.3.0"
+maps-services = "18.0.2"
+maps-compose = "2.1.0"
 
 
 [libraries]
@@ -88,9 +90,13 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 androidx-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "credentialsPlayServicesAuth" }
 androidx-credentials-play-services-auth = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "credentialsPlayServicesAuth" }
 googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }
-
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom"}
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth"}
+firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx"}
+
+#Google Maps
+google-play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "maps-services"}
+google-maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "maps-compose"}
 
 #DataStore
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore"}

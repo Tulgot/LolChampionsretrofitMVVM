@@ -9,7 +9,7 @@ import com.tulgot.lol.domain.room.model.ChampionRoom
 import com.tulgot.lol.domain.room.model.PassiveRoom
 import com.tulgot.lol.domain.room.RoomManager
 import com.tulgot.lol.domain.room.model.SpellRoom
-import com.tulgot.lol.presentation.BookMarksDetail
+import com.tulgot.lol.presentation.BookMarksDetailRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,7 +22,7 @@ class BookMarkDetailViewModel @Inject constructor(
 ) : ViewModel() {
 
     init {
-        val args = savedStateHandle.toRoute<BookMarksDetail>().id
+        val args = savedStateHandle.toRoute<BookMarksDetailRoute>().id
         getRoomChampionByID(args)
     }
 
