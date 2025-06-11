@@ -4,6 +4,8 @@ import com.tulgot.lol.data.LolChampionsRepositoryImpl
 import com.tulgot.lol.data.database.DefaultRoomManager
 import com.tulgot.lol.domain.LolChampionsRepository
 import com.tulgot.lol.domain.room.RoomManager
+import com.tulgot.lol.modules.firestore.data.DefaultFireStoreManager
+import com.tulgot.lol.modules.firestore.domain.FireStoreManager
 import com.tulgot.lol.modules.login.data.DefaultLoginManager
 import com.tulgot.lol.modules.login.domain.LoginManager
 import dagger.Binds
@@ -25,8 +27,10 @@ abstract class RepositoryModule {
     @Singleton
     abstract fun bindRoomManager(defaultRoomManager: DefaultRoomManager): RoomManager
 
-
     @Binds
     abstract fun bindLoginManager(defaultLoginManager: DefaultLoginManager): LoginManager
+
+    @Binds
+    abstract fun bindFireStoreManager(defaultFireStoreManager: DefaultFireStoreManager): FireStoreManager
 
 }

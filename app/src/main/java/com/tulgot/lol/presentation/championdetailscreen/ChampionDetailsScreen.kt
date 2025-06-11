@@ -19,15 +19,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.FavoriteBorder
-import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material.icons.rounded.NotInterested
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -36,9 +33,6 @@ import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -83,20 +77,27 @@ fun ChampionDetailsScreen(
 
         },
         floatingActionButton = {
-            if (championDetailsViewModel.checkDB.value){
+            if (championDetailsViewModel.checkDB.value) {
                 FloatingActionButton(
                     onClick = {
                         if (details != null) {
                             championDetailsViewModel.championRoom()
-                            championDetailsViewModel.checkDB.value = false
                         }
                     }
                 ) { Icon(Icons.Rounded.FavoriteBorder, null) }
+            }else{
+                FloatingActionButton(
+                    onClick = {
+                        championDetailsViewModel.deleteChampionDetail()
+                    }
+                ){
+                    Icon(Icons.Rounded.NotInterested, null)
+                }
             }
         },
         floatingActionButtonPosition = FabPosition.End,
 
-    ) { innerPadding ->
+        ) { innerPadding ->
 
         when (championDetailsResult.state) {
             UiStates.FAILURE -> {

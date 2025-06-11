@@ -94,6 +94,9 @@ firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.r
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth"}
 firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx"}
 
+#Firebase FireStore
+firebase-firestore = {module = "com.google.firebase:firebase-firestore"}
+
 #Google Maps
 google-play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "maps-services"}
 google-maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "maps-compose"}

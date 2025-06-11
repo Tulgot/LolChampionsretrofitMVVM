@@ -17,7 +17,6 @@ class DefaultRoomManager @Inject constructor(
         it.toChampionRoom()
     }
 
-
     override suspend fun insertChampionDetail(champion: Champion) {
         val championToChampionEntity = champion.toChampionEntity()
         championDao.insertChampionDetail(championToChampionEntity)
@@ -52,6 +51,10 @@ class DefaultRoomManager @Inject constructor(
         championDao.getSpellByChampionName(name).map {
             it.toSpellRoom()
         }
+
+    override suspend fun deleteChampionDetail(id: String){
+        championDao.deleteChampionDetail(id)
+    }
 
 
 }

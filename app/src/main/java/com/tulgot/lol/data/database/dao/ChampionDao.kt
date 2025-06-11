@@ -31,4 +31,8 @@ interface ChampionDao {
 
     @Query("SELECT * FROM spell_table WHERE championid = :name")
     fun getSpellByChampionName(name: String): List<SpellEntity>
+
+    @Query("DELETE FROM  champion_table WHERE id = :id")
+    fun deleteChampionDetail(id: String)
+
 }

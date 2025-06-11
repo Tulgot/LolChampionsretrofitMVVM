@@ -6,9 +6,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.tulgot.lol.domain.LolChampionsRepository
 import com.tulgot.lol.domain.network.UiStates
 import com.tulgot.lol.domain.room.RoomManager
+import com.tulgot.lol.modules.firestore.domain.FireStoreManager
 import com.tulgot.lol.presentation.ChampionDetailsRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -23,11 +26,13 @@ import javax.inject.Inject
 class ChampionDetailsViewModel @Inject constructor(
     private val lolChampionsRepository: LolChampionsRepository,
     private val roomManager: RoomManager,
+    private val fireStoreManager: FireStoreManager,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private var _championDetailsState = MutableStateFlow(ChampionDetailsState())
     val championDetailsState = _championDetailsState.asStateFlow()
+    val user = Firebase.auth.currentUser
 
     var checkDB = mutableStateOf(true)
 
@@ -40,6 +45,8 @@ class ChampionDetailsViewModel @Inject constructor(
 
     fun championRoom() {
         insertDB()
+        checkDB.value = false
+        addChampionDetailEntityFireStore()
     }
 
     private fun insertDB() {
@@ -47,11 +54,29 @@ class ChampionDetailsViewModel @Inject constructor(
             val championDetail = _championDetailsState.value.championDetails?.data?.first()
             try {
                 roomManager.insertChampionDetail(championDetail!!)
-                roomManager.insertPassive(championDetail.passive!!, championDetail.name.toString())
+                roomManager.insertPassive(championDetail.passive!!, championDetail.id.toString())
                 roomManager.insertSpell(championDetail.spells!!, championDetail.name.toString())
             } catch (e: Exception) {
                 e.stackTraceToString()
             }
+        }
+    }
+
+    private fun addChampionDetailEntityFireStore() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val championDetail = _championDetailsState.value.championDetails?.data?.first()
+            try {
+                fireStoreManager.addFavoriteChampion(championDetail!!, user?.uid.toString())
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun deleteChampionDetail() {
+        viewModelScope.launch(Dispatchers.IO) {
+            roomManager.deleteChampionDetail(_championDetailsState.value.championDetails?.data?.first()?.id.toString())
+            checkDB.value = true
         }
     }
 

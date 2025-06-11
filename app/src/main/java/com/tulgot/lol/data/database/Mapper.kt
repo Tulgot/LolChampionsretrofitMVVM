@@ -16,9 +16,7 @@ fun Champion.toChampionEntity() =
         blurb = blurb.toString(),
         image = image.toString(),
         name = name.toString(),
-        key = key.toString(),
         lore = lore.toString(),
-        spells = spells.toString(),
         tags = tags.toString(),
         title = title.toString()
     )
@@ -29,9 +27,7 @@ fun ChampionEntity.toChampionRoom() =
         blurb = blurb,
         image = image,
         name = name,
-        key = key,
         lore = lore,
-        spells = spells,
         tags = tags,
         title = title
     )

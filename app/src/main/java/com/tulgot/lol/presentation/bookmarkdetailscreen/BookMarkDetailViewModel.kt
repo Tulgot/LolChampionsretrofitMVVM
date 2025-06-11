@@ -64,4 +64,11 @@ class BookMarkDetailViewModel @Inject constructor(
     }
 
 
+    fun deleteChampionDetail(){
+        viewModelScope.launch(Dispatchers.IO) {
+            roomManager.deleteChampionDetail(championDetail.first().id.toString())
+        }
+    }
+
+
 }

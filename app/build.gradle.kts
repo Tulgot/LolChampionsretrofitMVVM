@@ -114,6 +114,9 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth.ktx)
 
+    //Firebase FireStore
+    implementation(libs.firebase.firestore)
+
 
     // Coil (Image Loader)
     implementation(libs.coil.compose)

@@ -16,4 +16,5 @@ interface RoomManager {
     suspend fun getPassiveByChampionName(name: String): PassiveRoom
     suspend fun insertSpell(spell: List<Spell>, id: String)
     suspend fun getSpellByChampionName(name: String): List<SpellRoom>
+    suspend fun deleteChampionDetail(id: String)
 }

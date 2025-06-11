@@ -110,9 +110,7 @@ fun AppNavigation() {
                         onClick = {
                             navController.navigate(listRoute[index])
                         },
-                        label = {
-                            Text(text = item.title)
-                        },
+                        label = null,
                         icon = {
                             Icon(
                                 imageVector = if (index == selectedItemIndex) {
@@ -167,7 +165,13 @@ fun AppNavigation() {
                             )
                         }
                         composable<BookMarksDetailRoute> {
-                            BookMarkDetailScreen()
+                            BookMarkDetailScreen(
+                                navigateToBookMarksRoute = {
+                                    navController.navigate(BookMarksRoute){
+                                        popUpTo(route = HomeGraph){ inclusive = true }
+                                    }
+                                }
+                            )
                         }
                         composable<ProfileRoute> {
                             LaunchedEffect(Unit) {

@@ -1,6 +1,5 @@
 package com.tulgot.lol.modules.login.presentation.ui
 
-import android.widget.Space
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -123,19 +122,24 @@ fun LoginScreen(
                 )
             }
 
-            Spacer(Modifier.fillMaxWidth().height(10.dp))
+            Spacer(
+                Modifier
+                    .fillMaxWidth()
+                    .height(10.dp))
 
-            if (emailMessege){
+            if (emailMessege) {
                 failValidation("Verificar el correo")
             }
 
-            if(pswMessege){
-                failValidation("La contraseña debe contar \n" +
-                        "con almenos una letra mayuscula \n" +
-                        "una letra minuscula \n" +
-                        "un numero \n" +
-                        "y con algun caraceter especial \n" +
-                        "y ser de almenos 6 caracteres")
+            if (pswMessege) {
+                failValidation(
+                    "La contraseña debe contar \n" +
+                            "con almenos una letra mayuscula \n" +
+                            "una letra minuscula \n" +
+                            "un numero \n" +
+                            "y con algun caraceter especial \n" +
+                            "y ser de almenos 6 caracteres"
+                )
             }
         }
     }

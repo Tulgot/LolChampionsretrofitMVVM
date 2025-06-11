@@ -6,9 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "passive_table")
 data class PassiveEntity(
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
-    val id: Int = 0,
+    @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "championid")
     val championid: String,
     @ColumnInfo(name = "description")
