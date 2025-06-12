@@ -4,7 +4,6 @@ import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.tulgot.lol.data.database.entities.ChampionEntity
 import com.tulgot.lol.domain.room.model.ChampionRoom
 import com.tulgot.lol.modules.login.presentation.ui.TAG
 import kotlinx.coroutines.tasks.await
@@ -17,11 +16,6 @@ class RemoteFireStoreDataSource @Inject constructor() {
 
     suspend fun addFavoriteChampion(champion: ChampionRoom, uid: String) {
         try {
-//            fireStoreDB.collection("Users")
-//                .document(uid)
-//                .update("favorites", FieldValue.arrayUnion(champion))
-//                .await()
-
             fireStoreDB.collection("Users")
                 .document(uid)
                 .collection("favorites")
@@ -35,19 +29,20 @@ class RemoteFireStoreDataSource @Inject constructor() {
     }
 
     suspend fun deleteFavoriteChampion(championId: String, uid: String) {
-//        try {
-//            fireStoreDB.collection("Users").document(uid).update("favorites", championList).await()
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//            if (e is CancellationException) throw e
-//            Log.i(TAG, "addToFireStore: ${e.message}")
-//        }
-        try{
-            fireStoreDB
+        try {
+            val favoriteChampionById = fireStoreDB
                 .collection("Users")
                 .document(uid)
-                .collection("favorites")
-                .document("id").delete() //TODO
+                .collection("favorites").get().await()
+
+            for (document in favoriteChampionById) {
+                if (document.data.values.contains(championId)) {
+                    fireStoreDB
+                        .collection("Users")
+                        .document(uid)
+                        .collection("favorites").document(document.id).delete()
+                }
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             if (e is CancellationException) throw e
@@ -63,8 +58,8 @@ class RemoteFireStoreDataSource @Inject constructor() {
                 .document(uid)
                 .collection("favorites")
                 .get()
-                .await().documents.mapNotNull { query ->
-                    query.toObject(ChampionRoom::class.java)
+                .await().documents.mapNotNull { snapshot ->
+                    snapshot.toObject(ChampionRoom::class.java)
                 }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -72,5 +67,6 @@ class RemoteFireStoreDataSource @Inject constructor() {
             Log.i(TAG, "addToFireStore: ${e.message}")
             emptyList()
         }
+
     }
 }

@@ -40,13 +40,12 @@ class ChampionDetailsViewModel @Inject constructor(
     init {
         val args = savedStateHandle.toRoute<ChampionDetailsRoute>().name
         loadChampionDetails(args)
-
     }
 
     private fun getFavoriteChampionsFireStore() {
         viewModelScope.launch(Dispatchers.IO) {
             val championlist = fireStoreManager.getFavoriteByUser(user?.uid.toString())
-            Log.i("TAG", "getFavoriteChampionsFireStore: ${championlist.first()}")
+            Log.i("loginerror", "getFavoriteChampionsFireStore: ${championlist.first()}")
         }
     }
 
@@ -82,7 +81,6 @@ class ChampionDetailsViewModel @Inject constructor(
 
     private fun deleteChampionDetailFireStore(championId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-//            val roomChampionList = roomManager.getAllChampions()
             fireStoreManager.deleteFavoriteChampion(championId, user?.uid.toString())
         }
     }
