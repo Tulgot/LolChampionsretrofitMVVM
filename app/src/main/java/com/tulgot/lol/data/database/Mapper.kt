@@ -32,6 +32,19 @@ fun ChampionEntity.toChampionRoom() =
         title = title
     )
 
+fun ChampionRoom.toChampionEntity() =
+    ChampionEntity(
+        id = id.toString(),
+        blurb = blurb.toString(),
+        image = image.toString(),
+        name = name.toString(),
+        lore = lore.toString(),
+        tags = tags,
+        title = title.toString()
+
+    )
+
+
 fun PassiveEntity.toPassiveRoom() =
     PassiveRoom(
         name = name,
@@ -52,4 +65,15 @@ fun Spell.toSpellEntity(id: String) =
         description = description.toString(),
         championid = id,
         id = this.id.toString()
+    )
+
+fun Champion.toChampionRoom() =
+    ChampionRoom(
+        id = id.toString(),
+        blurb = blurb.toString(),
+        image = image.toString(),
+        name = name.toString(),
+        lore = lore.toString(),
+        tags = tags.toString(),
+        title = title.toString()
     )

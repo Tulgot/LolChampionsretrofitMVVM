@@ -21,7 +21,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -46,6 +45,7 @@ import com.tulgot.lol.presentation.HomeGraph
 import com.tulgot.lol.presentation.LoginRoute
 import com.tulgot.lol.presentation.ProfileRoute
 import com.tulgot.lol.presentation.SettingsRoute
+import com.tulgot.lol.presentation.SignInGraph
 import com.tulgot.lol.presentation.bookmarkdetailscreen.BookMarkDetailScreen
 import com.tulgot.lol.presentation.bookmarksscreen.BookMarksScreen
 import com.tulgot.lol.presentation.championdetailscreen.ChampionDetailsScreen
@@ -167,8 +167,8 @@ fun AppNavigation() {
                         composable<BookMarksDetailRoute> {
                             BookMarkDetailScreen(
                                 navigateToBookMarksRoute = {
-                                    navController.navigate(BookMarksRoute){
-                                        popUpTo(route = HomeGraph){ inclusive = true }
+                                    navController.navigate(BookMarksRoute) {
+                                        popUpTo(route = HomeGraph) { inclusive = true }
                                     }
                                 }
                             )
@@ -176,7 +176,7 @@ fun AppNavigation() {
                         composable<ProfileRoute> {
                             LaunchedEffect(Unit) {
                                 if (FirebaseAuth.getInstance().currentUser == null) {
-                                    navController.navigate(LoginRoute){
+                                    navController.navigate(LoginRoute) {
                                         popUpTo(route = HomeGraph) { inclusive = true }
                                     }
                                 }
@@ -184,7 +184,7 @@ fun AppNavigation() {
                             }
                             ProfileScreen(
                                 navigateToLogIn = {
-                                    navController.navigate(LoginRoute) {
+                                    navController.navigate(SignInGraph) {
                                         popUpTo(route = HomeGraph) { inclusive = true }
                                     }
                                 }
@@ -192,6 +192,9 @@ fun AppNavigation() {
                         }
                         composable<GoogleMapRoute> {
                             MapScreen()
+                        }
+                        composable<SignInGraph> {
+                            LoginNavigation()
                         }
                     }
 

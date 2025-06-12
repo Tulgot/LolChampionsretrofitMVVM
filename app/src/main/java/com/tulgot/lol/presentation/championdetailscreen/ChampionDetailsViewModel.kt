@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,16 +38,22 @@ class ChampionDetailsViewModel @Inject constructor(
     var checkDB = mutableStateOf(true)
 
     init {
-
         val args = savedStateHandle.toRoute<ChampionDetailsRoute>().name
         loadChampionDetails(args)
 
     }
 
+    private fun getFavoriteChampionsFireStore() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val championlist = fireStoreManager.getFavoriteByUser(user?.uid.toString())
+            Log.i("TAG", "getFavoriteChampionsFireStore: ${championlist.first()}")
+        }
+    }
+
     fun championRoom() {
         insertDB()
         checkDB.value = false
-        addChampionDetailEntityFireStore()
+        addChampionDetailFireStore()
     }
 
     private fun insertDB() {
@@ -62,7 +69,7 @@ class ChampionDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun addChampionDetailEntityFireStore() {
+    private fun addChampionDetailFireStore() {
         viewModelScope.launch(Dispatchers.IO) {
             val championDetail = _championDetailsState.value.championDetails?.data?.first()
             try {
@@ -73,10 +80,22 @@ class ChampionDetailsViewModel @Inject constructor(
         }
     }
 
+    private fun deleteChampionDetailFireStore(championId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+//            val roomChampionList = roomManager.getAllChampions()
+            fireStoreManager.deleteFavoriteChampion(championId, user?.uid.toString())
+        }
+    }
+
     fun deleteChampionDetail() {
         viewModelScope.launch(Dispatchers.IO) {
-            roomManager.deleteChampionDetail(_championDetailsState.value.championDetails?.data?.first()?.id.toString())
+            withContext(Dispatchers.IO) {
+                val championId = _championDetailsState.value.championDetails?.data?.first()?.id.toString()
+                roomManager.deleteChampionDetail(championId)
+                deleteChampionDetailFireStore(championId)
+            }
             checkDB.value = true
+
         }
     }
 
