@@ -40,6 +40,7 @@ class ChampionDetailsViewModel @Inject constructor(
     init {
         val args = savedStateHandle.toRoute<ChampionDetailsRoute>().name
         loadChampionDetails(args)
+
     }
 
     private fun getFavoriteChampionsFireStore() {
@@ -106,7 +107,6 @@ class ChampionDetailsViewModel @Inject constructor(
     }
 
     private fun loadChampionDetails(name: String) {
-
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 _championDetailsState.update {
@@ -131,6 +131,7 @@ class ChampionDetailsViewModel @Inject constructor(
                     )
                 }
                 getRoomChampionById(name)
+                Log.i("loginerror", "${_championDetailsState.value.championDetails?.data}")
             }
 
         }

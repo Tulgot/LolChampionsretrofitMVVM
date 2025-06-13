@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.AuthResult
+import com.tulgot.lol.domain.room.RoomManager
 import com.tulgot.lol.modules.login.domain.LoginManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +16,9 @@ const val TAG = "LoginErrorMessage"
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val loginManager: LoginManager
+    private val loginManager: LoginManager,
+    private val roomManager: RoomManager,
+
 ) : ViewModel() {
 
     var authResult = mutableStateListOf<AuthResult?>()
@@ -32,11 +35,12 @@ class LoginViewModel @Inject constructor(
 
     fun logOut(success: () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
-            loginManager.signOut().let {
                 withContext(Dispatchers.Main) {
+                    loginManager.signOut()
+                    roomManager.deleteAllChampions()
                     success()
                 }
-            }
+
         }
     }
 

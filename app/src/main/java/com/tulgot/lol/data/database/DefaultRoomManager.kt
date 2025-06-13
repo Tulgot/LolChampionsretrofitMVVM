@@ -56,5 +56,9 @@ class DefaultRoomManager @Inject constructor(
         championDao.deleteChampionDetail(id)
     }
 
+    override suspend fun deleteAllChampions(){
+        championDao.deleteAllChampions()
+    }
+
 
 }

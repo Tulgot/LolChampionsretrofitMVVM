@@ -49,8 +49,8 @@ fun LoginScreen(
     var psw by rememberSaveable { mutableStateOf("") }
     val context = LocalContext.current
 
-    var emailMessege by remember { mutableStateOf(false) }
-    var pswMessege by remember { mutableStateOf(false) }
+    var emailMessage by remember { mutableStateOf(false) }
+    var pswMessage by remember { mutableStateOf(false) }
 
     Box(Modifier.fillMaxSize()) {
         Column(
@@ -81,10 +81,10 @@ fun LoginScreen(
                             Toast.makeText(context, "No existe usuario", Toast.LENGTH_SHORT).show()
                         },
                         failEmailValidation = {
-                            emailMessege = true
+                            emailMessage = true
                         },
                         failPswValidation = {
-                            pswMessege = true
+                            pswMessage = true
                         })
                 }) {
                 Text("Iniciar Sesión")
@@ -127,11 +127,11 @@ fun LoginScreen(
                     .fillMaxWidth()
                     .height(10.dp))
 
-            if (emailMessege) {
+            if (emailMessage) {
                 failValidation("Verificar el correo")
             }
 
-            if (pswMessege) {
+            if (pswMessage) {
                 failValidation(
                     "La contraseña debe contar \n" +
                             "con almenos una letra mayuscula \n" +

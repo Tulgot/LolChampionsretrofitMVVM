@@ -17,4 +17,5 @@ interface RoomManager {
     suspend fun insertSpell(spell: List<Spell>, id: String)
     suspend fun getSpellByChampionName(name: String): List<SpellRoom>
     suspend fun deleteChampionDetail(id: String)
+    suspend fun deleteAllChampions()
 }

@@ -35,4 +35,7 @@ interface ChampionDao {
     @Query("DELETE FROM  champion_table WHERE id = :id")
     fun deleteChampionDetail(id: String)
 
+    @Query("DELETE FROM champion_table")
+    fun deleteAllChampions()
+
 }

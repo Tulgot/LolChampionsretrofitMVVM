@@ -15,5 +15,4 @@ data class PassiveEntity(
     val name: String,
     @ColumnInfo(name = "image")
     val image: String
-
 )
