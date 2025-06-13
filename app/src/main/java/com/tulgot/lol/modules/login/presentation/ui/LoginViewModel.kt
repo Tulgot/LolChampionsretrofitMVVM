@@ -4,7 +4,14 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import com.tulgot.lol.domain.model.Champion
+import com.tulgot.lol.domain.model.Image
+import com.tulgot.lol.domain.model.Passive
+import com.tulgot.lol.domain.model.Spell
 import com.tulgot.lol.domain.room.RoomManager
+import com.tulgot.lol.modules.firestore.domain.FireStoreManager
 import com.tulgot.lol.modules.login.domain.LoginManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +25,7 @@ const val TAG = "LoginErrorMessage"
 class LoginViewModel @Inject constructor(
     private val loginManager: LoginManager,
     private val roomManager: RoomManager,
-
+    private val fireStoreManager: FireStoreManager
 ) : ViewModel() {
 
     var authResult = mutableStateListOf<AuthResult?>()
@@ -26,21 +33,60 @@ class LoginViewModel @Inject constructor(
 
     fun start(success: () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
-            loginManager.signInGoogle().collect {
-                authResult.add(it)
-                withContext(Dispatchers.Main) { if (it != null) success() }
+            withContext(Dispatchers.IO) {
+                loginManager.signInGoogle().collect {
+                    authResult.add(it)
+                    withContext(Dispatchers.Main) { if (it != null) success() }
+
+                }
+            }
+        }
+    }
+
+    private fun getFavoriteChampionsFireStore() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val user = Firebase.auth.currentUser
+            val championList = fireStoreManager.getFavoriteByUser(user?.uid.toString())
+            for(ChampionRoom in championList.championList){
+                roomManager.insertChampionDetail(
+                    Champion(
+                        id = ChampionRoom.id,
+                        blurb = ChampionRoom.blurb,
+                        image = Image(ChampionRoom.image,""),
+                        name = ChampionRoom.name,
+                        lore = ChampionRoom.lore,
+                        tags = listOf(ChampionRoom.tags),
+                        title = ChampionRoom.title,
+                        passive = Passive("",
+                            Image("",""),
+                            ""),
+                        key = "",
+                        spells = listOf()
+                )
+                )
+            }
+            championList.passiveList.forEach { passiveRoom->
+                roomManager.insertPassive(
+                    Passive(
+                        description = passiveRoom.description,
+                        image = Image(passiveRoom.image.toString(),""),
+                        name = passiveRoom.name
+                    ),
+                    id = passiveRoom.championid.toString()
+                )
             }
         }
     }
 
     fun logOut(success: () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
+            roomManager.deleteAllChampions()
+            roomManager.deleteAllPassives()
+            roomManager.deleteAllSpells()
                 withContext(Dispatchers.Main) {
                     loginManager.signOut()
-                    roomManager.deleteAllChampions()
                     success()
                 }
-
         }
     }
 

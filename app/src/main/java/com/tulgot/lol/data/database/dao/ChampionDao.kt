@@ -38,4 +38,9 @@ interface ChampionDao {
     @Query("DELETE FROM champion_table")
     fun deleteAllChampions()
 
+    @Query("DELETE FROM spell_table")
+    fun deleteAllSpells()
+
+    @Query("DELETE FROM champion_table")
+    fun deleteAllPassives()
 }

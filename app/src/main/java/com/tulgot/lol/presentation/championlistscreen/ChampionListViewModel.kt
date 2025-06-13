@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tulgot.lol.domain.LolChampionsRepository
 import com.tulgot.lol.domain.network.UiStates
+import com.tulgot.lol.domain.room.RoomManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChampionListViewModel @Inject constructor(
-    private val lolChampionsRepository: LolChampionsRepository
+    private val lolChampionsRepository: LolChampionsRepository,
+    private val roomManager: RoomManager
 ) : ViewModel() {
 
     private var _championListState = MutableStateFlow(ChampionListState())

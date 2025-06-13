@@ -1,11 +1,11 @@
 package com.tulgot.lol.modules.firestore.domain
 
 import com.tulgot.lol.domain.model.Champion
-import com.tulgot.lol.domain.room.model.ChampionRoom
+import com.tulgot.lol.modules.firestore.data.RemoteFireStoreDataSource.FavoriteFirestoreByUser
 
 interface FireStoreManager {
 
     suspend fun addFavoriteChampion(champion: Champion, uid: String)
     suspend fun deleteFavoriteChampion(championId: String, uid: String)
-    suspend fun getFavoriteByUser(uid: String): List<ChampionRoom>
+    suspend fun getFavoriteByUser(uid: String): FavoriteFirestoreByUser
 }

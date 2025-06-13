@@ -40,14 +40,6 @@ class ChampionDetailsViewModel @Inject constructor(
     init {
         val args = savedStateHandle.toRoute<ChampionDetailsRoute>().name
         loadChampionDetails(args)
-
-    }
-
-    private fun getFavoriteChampionsFireStore() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val championlist = fireStoreManager.getFavoriteByUser(user?.uid.toString())
-            Log.i("loginerror", "getFavoriteChampionsFireStore: ${championlist.first()}")
-        }
     }
 
     fun championRoom() {
@@ -62,7 +54,7 @@ class ChampionDetailsViewModel @Inject constructor(
             try {
                 roomManager.insertChampionDetail(championDetail!!)
                 roomManager.insertPassive(championDetail.passive!!, championDetail.id.toString())
-                roomManager.insertSpell(championDetail.spells!!, championDetail.name.toString())
+                roomManager.insertSpell(championDetail.spells!!, championDetail.id.toString())
             } catch (e: Exception) {
                 e.stackTraceToString()
             }
@@ -100,7 +92,7 @@ class ChampionDetailsViewModel @Inject constructor(
 
     private fun getRoomChampionById(args: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            if (roomManager.getChampionById(args).isNotEmpty()) {
+            if (roomManager. getChampionById(args).isNotEmpty()) {
                 checkDB.value = false
             }
         }

@@ -49,7 +49,8 @@ fun PassiveEntity.toPassiveRoom() =
     PassiveRoom(
         name = name,
         description = description,
-        image = image
+        image = image,
+        championid = championid
     )
 
 fun SpellEntity.toSpellRoom() =
@@ -57,10 +58,19 @@ fun SpellEntity.toSpellRoom() =
         name = name,
         description = description,
         id = id,
+        championid = championid
     )
 
 fun Spell.toSpellEntity(id: String) =
     SpellEntity(
+        name = name.toString(),
+        description = description.toString(),
+        championid = id,
+        id = this.id.toString()
+    )
+
+fun Spell.toSpellRoom(id: String) =
+    SpellRoom(
         name = name.toString(),
         description = description.toString(),
         championid = id,

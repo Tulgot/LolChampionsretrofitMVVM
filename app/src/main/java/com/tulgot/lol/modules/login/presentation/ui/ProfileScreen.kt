@@ -78,7 +78,7 @@ fun ProfileScreen(
                 )
 
                 if (user?.displayName != null) {
-                    TextShow(user?.displayName.toString())
+                    TextShow(user.displayName.toString())
                 }
 
                 TextShow(user?.email.toString())

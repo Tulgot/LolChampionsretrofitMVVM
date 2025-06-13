@@ -18,4 +18,6 @@ interface RoomManager {
     suspend fun getSpellByChampionName(name: String): List<SpellRoom>
     suspend fun deleteChampionDetail(id: String)
     suspend fun deleteAllChampions()
+    suspend fun deleteAllSpells()
+    suspend fun deleteAllPassives()
 }
