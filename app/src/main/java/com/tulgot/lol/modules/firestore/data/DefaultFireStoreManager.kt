@@ -5,7 +5,7 @@ import com.tulgot.lol.data.database.toSpellRoom
 import com.tulgot.lol.domain.model.Champion
 import com.tulgot.lol.domain.room.model.PassiveRoom
 import com.tulgot.lol.domain.room.model.SpellRoom
-import com.tulgot.lol.modules.firestore.data.RemoteFireStoreDataSource.FavoriteFirestoreByUser
+import com.tulgot.lol.modules.firestore.data.RemoteFireStoreDataSource.FavoriteFireStoreByUser
 import com.tulgot.lol.modules.firestore.domain.FireStoreManager
 import javax.inject.Inject
 
@@ -31,7 +31,7 @@ class DefaultFireStoreManager @Inject constructor(
         remoteFireStoreDataSource.deleteFavoriteChampion(championId, uid)
     }
 
-    override suspend fun getFavoriteByUser(uid: String): FavoriteFirestoreByUser {
+    override suspend fun getFavoriteByUser(uid: String): FavoriteFireStoreByUser {
         return remoteFireStoreDataSource.getFavoriteByUser(uid)
     }
 }

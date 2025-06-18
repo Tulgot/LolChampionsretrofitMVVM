@@ -8,6 +8,7 @@ import androidx.navigation.toRoute
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.tulgot.lol.domain.network.internetconnectionobserver.domain.ConnectivityObserver
 import com.tulgot.lol.domain.room.model.ChampionRoom
 import com.tulgot.lol.domain.room.model.PassiveRoom
 import com.tulgot.lol.domain.room.RoomManager
@@ -16,6 +17,8 @@ import com.tulgot.lol.modules.firestore.domain.FireStoreManager
 import com.tulgot.lol.presentation.BookMarksDetailRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -24,8 +27,15 @@ import javax.inject.Inject
 class BookMarkDetailViewModel @Inject constructor(
     private val roomManager: RoomManager,
     private val fireStoreManager: FireStoreManager,
+    private val connectivityObserver: ConnectivityObserver,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    val isConnected = connectivityObserver.isConnected.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000L),
+        false
+    )
 
     init {
         val args = savedStateHandle.toRoute<BookMarksDetailRoute>().id
@@ -76,14 +86,14 @@ class BookMarkDetailViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             withContext(Dispatchers.IO){
                 roomManager.deleteChampionDetail(championDetail.first().id.toString())
-                deleteChampionDetailFireStore()
+                deleteChampionDetailFireStore(championDetail.first().id.toString())
             }
         }
     }
 
-    private fun deleteChampionDetailFireStore(){
+    private fun deleteChampionDetailFireStore(championId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-//            fireStoreManager.deleteFavoriteChampion(roomManager.getAllChampions(), user?.uid.toString())
+            fireStoreManager.deleteFavoriteChampion(championId, user?.uid.toString())
         }
     }
 

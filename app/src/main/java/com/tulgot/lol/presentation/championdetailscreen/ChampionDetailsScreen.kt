@@ -62,6 +62,7 @@ fun ChampionDetailsScreen(
 
     val championDetailsResult by championDetailsViewModel.championDetailsState.collectAsState()
     val details = championDetailsResult.championDetails?.data?.firstOrNull()
+    val isConnected = championDetailsViewModel.isConnected.collectAsState()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -78,21 +79,23 @@ fun ChampionDetailsScreen(
 
         },
         floatingActionButton = {
-            if (championDetailsViewModel.checkDB.value) {
-                FloatingActionButton(
-                    onClick = {
-                        if (details != null) {
-                            championDetailsViewModel.championRoom()
+            if (isConnected.value){
+                if (championDetailsViewModel.checkDB.value) {
+                    FloatingActionButton(
+                        onClick = {
+                            if (details != null) {
+                                championDetailsViewModel.championRoom()
+                            }
                         }
+                    ) { Icon(Icons.Rounded.FavoriteBorder, null) }
+                } else {
+                    FloatingActionButton(
+                        onClick = {
+                            championDetailsViewModel.deleteChampionDetail()
+                        }
+                    ) {
+                        Icon(Icons.Rounded.NotInterested, null)
                     }
-                ) { Icon(Icons.Rounded.FavoriteBorder, null) }
-            } else {
-                FloatingActionButton(
-                    onClick = {
-                        championDetailsViewModel.deleteChampionDetail()
-                    }
-                ) {
-                    Icon(Icons.Rounded.NotInterested, null)
                 }
             }
         },

@@ -10,8 +10,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -27,12 +29,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.tulgot.lol.R
 import com.tulgot.lol.domain.IMAGE_URL
 import com.tulgot.lol.domain.model.Champion
 import com.tulgot.lol.domain.network.UiStates
@@ -47,9 +51,78 @@ fun ChampionListScreen(
     val championListResult by championListViewModel.championListState.collectAsState()
     val championList = championListResult.championList?.data?.toList()
     val context = LocalContext.current
+    val isConnected = championListViewModel.isConnected.collectAsState()
+
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        content = { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = innerPadding.calculateTopPadding())
+                    .padding(horizontal = 20.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                if (isConnected.value) {
+                    when (championListResult.state) {
+                        UiStates.FAILURE -> {
+                            Toast.makeText(context, "No hay datos", Toast.LENGTH_SHORT).show()
+                        }
+
+                        UiStates.LOADING -> {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier
+                                        .size(80.dp),
+                                    color = MaterialTheme.colorScheme.primary,
+                                )
+                            }
+                        }
+
+                        UiStates.SUCCESS -> {
+
+                            LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                                championList?.let { championlist ->
+                                    items(championlist.size) { champion ->
+                                        ChampionCard(championList[champion], navigateToDetail)
+                                    }
+                                }
+
+                            }
+                        }
+
+                        UiStates.NONE -> {}
+                    }
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .align(Alignment.CenterHorizontally),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Icon(
+                                painter = painterResource(R.drawable.wifioff_111094),
+                                contentDescription = null,
+                                Modifier.size(width = 50.dp, height = 50.dp)
+                            )
+                            Text(
+                                text = "Detectamos problemas con su conexion a internet",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.width(300.dp)
+
+                            )
+                        }
+                    }
+                }
+
+            }
+        },
         topBar = {
             TopAppBar(
                 colors = topAppBarColors(
@@ -61,46 +134,7 @@ fun ChampionListScreen(
                 }
             )
         }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = innerPadding.calculateTopPadding())
-                .padding(horizontal = 20.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            when (championListResult.state) {
-                UiStates.FAILURE -> {
-                    Toast.makeText(context, "No hay datos", Toast.LENGTH_SHORT).show()
-                }
-
-                UiStates.LOADING -> {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .size(80.dp),
-                            color = MaterialTheme.colorScheme.primary,
-                        )
-                    }
-                }
-
-                UiStates.SUCCESS -> {
-
-                    LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                        championList?.let { championlist ->
-                            items(championlist.size) { champion ->
-                                ChampionCard(championList[champion], navigateToDetail)
-                            }
-                        }
-
-                    }
-                }
-
-                UiStates.NONE -> {}
-            }
-
-        }
-    }
+    )
 
 
 }

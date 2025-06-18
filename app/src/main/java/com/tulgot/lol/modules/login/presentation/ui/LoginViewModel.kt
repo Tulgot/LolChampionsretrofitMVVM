@@ -10,11 +10,14 @@ import com.tulgot.lol.domain.model.Champion
 import com.tulgot.lol.domain.model.Image
 import com.tulgot.lol.domain.model.Passive
 import com.tulgot.lol.domain.model.Spell
+import com.tulgot.lol.domain.network.internetconnectionobserver.domain.ConnectivityObserver
 import com.tulgot.lol.domain.room.RoomManager
 import com.tulgot.lol.modules.firestore.domain.FireStoreManager
 import com.tulgot.lol.modules.login.domain.LoginManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -25,11 +28,19 @@ const val TAG = "LoginErrorMessage"
 class LoginViewModel @Inject constructor(
     private val loginManager: LoginManager,
     private val roomManager: RoomManager,
-    private val fireStoreManager: FireStoreManager
+    private val fireStoreManager: FireStoreManager,
+    private val connectivityObserver: ConnectivityObserver
 ) : ViewModel() {
 
     var authResult = mutableStateListOf<AuthResult?>()
         private set
+
+    val isConnected = connectivityObserver.isConnected.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000L),
+        false
+    )
+
 
     fun start(success: () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -43,40 +54,6 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun getFavoriteChampionsFireStore() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val user = Firebase.auth.currentUser
-            val championList = fireStoreManager.getFavoriteByUser(user?.uid.toString())
-            for(ChampionRoom in championList.championList){
-                roomManager.insertChampionDetail(
-                    Champion(
-                        id = ChampionRoom.id,
-                        blurb = ChampionRoom.blurb,
-                        image = Image(ChampionRoom.image,""),
-                        name = ChampionRoom.name,
-                        lore = ChampionRoom.lore,
-                        tags = listOf(ChampionRoom.tags),
-                        title = ChampionRoom.title,
-                        passive = Passive("",
-                            Image("",""),
-                            ""),
-                        key = "",
-                        spells = listOf()
-                )
-                )
-            }
-            championList.passiveList.forEach { passiveRoom->
-                roomManager.insertPassive(
-                    Passive(
-                        description = passiveRoom.description,
-                        image = Image(passiveRoom.image.toString(),""),
-                        name = passiveRoom.name
-                    ),
-                    id = passiveRoom.championid.toString()
-                )
-            }
-        }
-    }
 
     fun logOut(success: () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {

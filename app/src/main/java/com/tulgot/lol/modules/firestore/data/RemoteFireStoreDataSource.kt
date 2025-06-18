@@ -36,11 +36,11 @@ class RemoteFireStoreDataSource @Inject constructor() {
                 .collection("passive")
                 .add(passive)
 
-            for (SpellRoom in spells) {
+            for (spellRoom in spells) {
                 fireStoreDB.collection("Users")
                     .document(uid)
                     .collection("spells")
-                    .add(SpellRoom)
+                    .add(spellRoom)
                     .await()
             }
 
@@ -107,15 +107,15 @@ class RemoteFireStoreDataSource @Inject constructor() {
 
     }
 
-    data class FavoriteFirestoreByUser(
+    data class FavoriteFireStoreByUser(
         @SerializedName("championList") val championList: List<ChampionRoom>,
         @SerializedName("passiveList") val passiveList: List<PassiveRoom>,
         @SerializedName("spellList") val spellList: List<SpellRoom>,
     )
 
-    suspend fun getFavoriteByUser(uid: String): FavoriteFirestoreByUser {
+    suspend fun getFavoriteByUser(uid: String): FavoriteFireStoreByUser {
         try {
-            val chamionsList = fireStoreDB
+            val championsList = fireStoreDB
                 .collection("Users")
                 .document(uid)
                 .collection("favorites")
@@ -142,13 +142,13 @@ class RemoteFireStoreDataSource @Inject constructor() {
                     snapshot.toObject(SpellRoom::class.java)
                 }
 
-            val allchampions = FavoriteFirestoreByUser(chamionsList, passivesList, spellsList)
-            return allchampions
+            val allChampions = FavoriteFireStoreByUser(championsList, passivesList, spellsList)
+            return allChampions
         } catch (e: Exception) {
             e.printStackTrace()
             if (e is CancellationException) throw e
             Log.i(TAG, "getFavoriteByUser: ${e.message}")
-            return FavoriteFirestoreByUser(emptyList(), emptyList(), emptyList())
+            return FavoriteFireStoreByUser(emptyList(), emptyList(), emptyList())
         }
 
     }

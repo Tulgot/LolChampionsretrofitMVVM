@@ -28,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,6 +53,8 @@ fun BookMarkDetailScreen(
     bookMarkDetailViewModel: BookMarkDetailViewModel = hiltViewModel()
 ) {
 
+    val isConnected = bookMarkDetailViewModel.isConnected.collectAsState()
+
     Scaffold(
         modifier = Modifier.fillMaxWidth(),
         topBar = {
@@ -66,15 +69,20 @@ fun BookMarkDetailScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    bookMarkDetailViewModel.deleteChampionDetail()
-                    navigateToBookMarksRoute()
-                }
-            ) { Icon(Icons.Rounded.NotInterested, null) }
+
+            if (isConnected.value){
+                FloatingActionButton(
+                    onClick = {
+                        bookMarkDetailViewModel.deleteChampionDetail()
+                        navigateToBookMarksRoute()
+                    },
+
+                    ) { Icon(Icons.Rounded.NotInterested, null) }
+            }
 
         },
         floatingActionButtonPosition = FabPosition.End,
+
     ) { innerPadding ->
 
         Box(

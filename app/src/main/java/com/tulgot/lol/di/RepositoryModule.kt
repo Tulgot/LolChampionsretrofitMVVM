@@ -3,6 +3,8 @@ package com.tulgot.lol.di
 import com.tulgot.lol.data.LolChampionsRepositoryImpl
 import com.tulgot.lol.data.database.DefaultRoomManager
 import com.tulgot.lol.domain.LolChampionsRepository
+import com.tulgot.lol.domain.network.internetconnectionobserver.data.AndroidConnectivityObserver
+import com.tulgot.lol.domain.network.internetconnectionobserver.domain.ConnectivityObserver
 import com.tulgot.lol.domain.room.RoomManager
 import com.tulgot.lol.modules.firestore.data.DefaultFireStoreManager
 import com.tulgot.lol.modules.firestore.domain.FireStoreManager
@@ -32,5 +34,8 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindFireStoreManager(defaultFireStoreManager: DefaultFireStoreManager): FireStoreManager
+
+    @Binds
+    abstract fun bindConnectivityObserver(androidConnectivityObserver: AndroidConnectivityObserver): ConnectivityObserver
 
 }

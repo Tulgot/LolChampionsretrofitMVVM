@@ -10,14 +10,17 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.tulgot.lol.domain.LolChampionsRepository
 import com.tulgot.lol.domain.network.UiStates
+import com.tulgot.lol.domain.network.internetconnectionobserver.domain.ConnectivityObserver
 import com.tulgot.lol.domain.room.RoomManager
 import com.tulgot.lol.modules.firestore.domain.FireStoreManager
 import com.tulgot.lol.presentation.ChampionDetailsRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -28,12 +31,18 @@ class ChampionDetailsViewModel @Inject constructor(
     private val lolChampionsRepository: LolChampionsRepository,
     private val roomManager: RoomManager,
     private val fireStoreManager: FireStoreManager,
+    private val connectivityObserver: ConnectivityObserver,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private var _championDetailsState = MutableStateFlow(ChampionDetailsState())
     val championDetailsState = _championDetailsState.asStateFlow()
     val user = Firebase.auth.currentUser
+    val isConnected = connectivityObserver.isConnected.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000L),
+        false
+    )
 
     var checkDB = mutableStateOf(true)
 
@@ -92,7 +101,7 @@ class ChampionDetailsViewModel @Inject constructor(
 
     private fun getRoomChampionById(args: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            if (roomManager. getChampionById(args).isNotEmpty()) {
+            if (roomManager.getChampionById(args).isNotEmpty()) {
                 checkDB.value = false
             }
         }
