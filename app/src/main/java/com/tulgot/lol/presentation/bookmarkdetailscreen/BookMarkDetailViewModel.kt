@@ -5,13 +5,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.tulgot.lol.domain.network.internetconnectionobserver.domain.ConnectivityObserver
+import com.tulgot.lol.domain.room.RoomManager
 import com.tulgot.lol.domain.room.model.ChampionRoom
 import com.tulgot.lol.domain.room.model.PassiveRoom
-import com.tulgot.lol.domain.room.RoomManager
 import com.tulgot.lol.domain.room.model.SpellRoom
 import com.tulgot.lol.modules.firestore.domain.FireStoreManager
 import com.tulgot.lol.presentation.BookMarksDetailRoute
@@ -75,16 +74,16 @@ class BookMarkDetailViewModel @Inject constructor(
     }
 
     private fun stringToList(tags: String) {
-        val substring  = tags.substring(1, tags.length - 1)
+        val substring = tags.substring(1, tags.length - 1)
         val substringSplit = substring.split(",").map { it.trim() }
         val listOfSubstring = substringSplit.toList()
         taglist.addAll(listOfSubstring)
     }
 
 
-    fun deleteChampionDetail(){
+    fun deleteChampionDetail() {
         viewModelScope.launch(Dispatchers.IO) {
-            withContext(Dispatchers.IO){
+            withContext(Dispatchers.IO) {
                 roomManager.deleteChampionDetail(championDetail.first().id.toString())
                 deleteChampionDetailFireStore(championDetail.first().id.toString())
             }

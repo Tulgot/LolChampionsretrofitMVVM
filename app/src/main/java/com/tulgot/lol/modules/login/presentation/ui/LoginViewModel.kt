@@ -4,15 +4,8 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
-import com.tulgot.lol.domain.model.Champion
-import com.tulgot.lol.domain.model.Image
-import com.tulgot.lol.domain.model.Passive
-import com.tulgot.lol.domain.model.Spell
 import com.tulgot.lol.domain.network.internetconnectionobserver.domain.ConnectivityObserver
 import com.tulgot.lol.domain.room.RoomManager
-import com.tulgot.lol.modules.firestore.domain.FireStoreManager
 import com.tulgot.lol.modules.login.domain.LoginManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +21,6 @@ const val TAG = "LoginErrorMessage"
 class LoginViewModel @Inject constructor(
     private val loginManager: LoginManager,
     private val roomManager: RoomManager,
-    private val fireStoreManager: FireStoreManager,
     private val connectivityObserver: ConnectivityObserver
 ) : ViewModel() {
 
@@ -60,10 +52,10 @@ class LoginViewModel @Inject constructor(
             roomManager.deleteAllChampions()
             roomManager.deleteAllPassives()
             roomManager.deleteAllSpells()
-                withContext(Dispatchers.Main) {
-                    loginManager.signOut()
-                    success()
-                }
+            withContext(Dispatchers.Main) {
+                loginManager.signOut()
+                success()
+            }
         }
     }
 
@@ -110,13 +102,13 @@ class LoginViewModel @Inject constructor(
         val pswValidation = pswValidation(password)
 
         if (emailValidation && pswValidation) {
-        viewModelScope.launch(Dispatchers.IO) {
-            loginManager.register(user, password).addOnCompleteListener {
-                if (it.isSuccessful) {
-                    success()
+            viewModelScope.launch(Dispatchers.IO) {
+                loginManager.register(user, password).addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        success()
+                    }
                 }
             }
-        }
         } else {
             if (!emailValidation) {
                 failEmailValidation()
