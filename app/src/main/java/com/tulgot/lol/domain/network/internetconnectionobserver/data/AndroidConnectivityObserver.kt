@@ -4,6 +4,7 @@ import android.net.ConnectivityManager
 import android.net.ConnectivityManager.NetworkCallback
 import android.net.Network
 import android.net.NetworkCapabilities
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.getSystemService
 import com.tulgot.lol.App
 import com.tulgot.lol.domain.network.internetconnectionobserver.domain.ConnectivityObserver
@@ -16,6 +17,15 @@ import javax.inject.Inject
 class AndroidConnectivityObserver @Inject constructor() : ConnectivityObserver {
 
     private val connectivityManager = App.appContext!!.getSystemService<ConnectivityManager>()!!
+
+
+    override fun connectionCheck(): Boolean{
+        val network = connectivityManager.activeNetwork
+        val capabilities = connectivityManager.getNetworkCapabilities(network)
+        val hasInternet = capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+        return hasInternet
+    }
+
 
     override val isConnected: Flow<Boolean>
         get() = callbackFlow {
@@ -51,5 +61,7 @@ class AndroidConnectivityObserver @Inject constructor() : ConnectivityObserver {
                 connectivityManager.unregisterNetworkCallback(callback)
             }
         }
+
+
 
 }

@@ -117,6 +117,8 @@ dependencies {
     //Firebase FireStore
     implementation(libs.firebase.firestore)
 
+    //Firebase Cloud Storage
+    implementation(libs.firebase.storage)
 
     // Coil (Image Loader)
     implementation(libs.coil.compose)

@@ -1,5 +1,7 @@
 package com.tulgot.lol.presentation.bookmarkdetailscreen
 
+import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -13,6 +15,7 @@ import com.tulgot.lol.domain.room.model.ChampionRoom
 import com.tulgot.lol.domain.room.model.PassiveRoom
 import com.tulgot.lol.domain.room.model.SpellRoom
 import com.tulgot.lol.modules.firestore.domain.FireStoreManager
+import com.tulgot.lol.modules.storage.domain.StorageManager
 import com.tulgot.lol.presentation.BookMarksDetailRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -27,6 +30,7 @@ class BookMarkDetailViewModel @Inject constructor(
     private val roomManager: RoomManager,
     private val fireStoreManager: FireStoreManager,
     private val connectivityObserver: ConnectivityObserver,
+    private val storageManager: StorageManager,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -57,20 +61,24 @@ class BookMarkDetailViewModel @Inject constructor(
 
     private fun getRoomChampionByID(args: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            if (roomManager.getChampionById(args).isNotEmpty()) {
-                roomManager.getChampionById(args).let {
-                    championDetail.addAll(it)
-                    stringToList(it.first().tags)
+            withContext(Dispatchers.IO){
+                if (roomManager.getChampionById(args).isNotEmpty()) {
+                    roomManager.getChampionById(args).let {
+                        championDetail.addAll(it)
+                        stringToList(it.first().tags)
 
-                }
-                roomManager.getPassiveByChampionName(args).let {
-                    passive.add(it)
-                }
-                roomManager.getSpellByChampionName(args).let {
-                    spell.addAll(it)
+                    }
+                    roomManager.getPassiveByChampionName(args).let {
+                        passive.add(it)
+                    }
+                    roomManager.getSpellByChampionName(args).let {
+                        spell.addAll(it)
+                    }
                 }
             }
         }
+
+
     }
 
     private fun stringToList(tags: String) {
@@ -93,6 +101,13 @@ class BookMarkDetailViewModel @Inject constructor(
     private fun deleteChampionDetailFireStore(championId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             fireStoreManager.deleteFavoriteChampion(championId, user?.uid.toString())
+        }
+    }
+
+    fun storeImage(uri: Uri?){
+        viewModelScope.launch(Dispatchers.IO) {
+//            storageManager.storeImage(user?.uid.toString(), uri)
+            Log.i("storeImage", "storeImage: $uri")
         }
     }
 

@@ -49,13 +49,17 @@ class LoginViewModel @Inject constructor(
 
     fun logOut(success: () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
-            roomManager.deleteAllChampions()
-            roomManager.deleteAllPassives()
-            roomManager.deleteAllSpells()
-            withContext(Dispatchers.Main) {
-                loginManager.signOut()
-                success()
+            withContext(Dispatchers.IO){
+                roomManager.deleteAllChampions()
+                roomManager.deleteAllPassives()
+                roomManager.deleteAllSpells()
+                withContext(Dispatchers.Main) {
+                    loginManager.signOut()
+                    success()
+                }
             }
+
+
         }
     }
 

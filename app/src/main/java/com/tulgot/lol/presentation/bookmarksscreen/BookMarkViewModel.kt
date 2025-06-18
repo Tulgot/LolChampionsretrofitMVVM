@@ -2,6 +2,7 @@ package com.tulgot.lol.presentation.bookmarksscreen
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -16,6 +17,7 @@ import com.tulgot.lol.modules.firestore.domain.FireStoreManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -28,19 +30,16 @@ class BookMarkViewModel @Inject constructor(
     private val connectivityObserver: AndroidConnectivityObserver
 ) : ViewModel() {
 
-    private val isConnected = connectivityObserver.isConnected.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(5000L),
-        false
-    )
+
 
     init {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                getChamionList()
                 if (championList.isEmpty()) {
-                    getFavoriteChampionsFireStore()
+                    getFavoriteChampionsFireStore(connectivityObserver.connectionCheck())
                 }
+
+                getChamionList()
             }
         }
     }
@@ -56,9 +55,16 @@ class BookMarkViewModel @Inject constructor(
         }
     }
 
-    private fun getFavoriteChampionsFireStore() {
+    private fun stringToList(tags: String): List<String>{
+        val substring = tags.substring(1, tags.length - 1)
+        val substringSplit = substring.split(",").map { it.trim() }
+        val listOfSubstring = substringSplit.toList()
+        return listOfSubstring
+    }
+
+    private fun getFavoriteChampionsFireStore(isConnected: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
-            if (isConnected.value) {
+            if (isConnected) {
                 val user = Firebase.auth.currentUser
                 val championList = fireStoreManager.getFavoriteByUser(user?.uid.toString())
                 if (championList.championList.isNotEmpty()) {
@@ -70,7 +76,7 @@ class BookMarkViewModel @Inject constructor(
                                 image = Image(it.image, ""),
                                 name = it.name,
                                 lore = it.lore,
-                                tags = listOf(it.tags),
+                                tags = stringToList(it.tags),
                                 title = it.title,
                                 passive = Passive(
                                     "",
