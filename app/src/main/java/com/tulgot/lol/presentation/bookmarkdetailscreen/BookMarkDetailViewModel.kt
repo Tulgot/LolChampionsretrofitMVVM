@@ -105,9 +105,12 @@ class BookMarkDetailViewModel @Inject constructor(
     }
 
     fun storeImage(uri: Uri?){
-        viewModelScope.launch(Dispatchers.IO) {
-//            storageManager.storeImage(user?.uid.toString(), uri)
-            Log.i("storeImage", "storeImage: $uri")
+        if (uri != null){
+            if (uri.toString().isNotEmpty()){
+                viewModelScope.launch(Dispatchers.IO) {
+                    storageManager.storeImage(user?.uid.toString(), uri)
+                }
+            }
         }
     }
 

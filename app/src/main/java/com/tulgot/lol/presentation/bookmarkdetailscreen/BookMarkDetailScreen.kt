@@ -69,7 +69,9 @@ fun BookMarkDetailScreen(
 
     val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = {uri -> bookMarkDetailViewModel.storeImage(uri)}
+        onResult = { uri ->
+            bookMarkDetailViewModel.storeImage(uri)
+        }
     )
 
     Scaffold(
