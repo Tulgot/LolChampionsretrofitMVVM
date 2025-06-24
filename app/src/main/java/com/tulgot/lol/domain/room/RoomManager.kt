@@ -20,4 +20,5 @@ interface RoomManager {
     suspend fun deleteAllChampions()
     suspend fun deleteAllSpells()
     suspend fun deleteAllPassives()
+    suspend fun updateChampionImage(url: String, championId: String)
 }

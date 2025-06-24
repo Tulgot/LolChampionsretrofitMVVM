@@ -34,4 +34,12 @@ class DefaultFireStoreManager @Inject constructor(
     override suspend fun getFavoriteByUser(uid: String): FavoriteFireStoreByUser {
         return remoteFireStoreDataSource.getFavoriteByUser(uid)
     }
+
+    override suspend fun updateFireStoreChampionImage(
+        url: String,
+        championId: String,
+        uid: String
+    ) {
+        remoteFireStoreDataSource.updateFavoriteImage(url, championId, uid)
+    }
 }

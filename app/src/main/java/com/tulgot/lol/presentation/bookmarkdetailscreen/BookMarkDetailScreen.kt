@@ -1,7 +1,5 @@
 package com.tulgot.lol.presentation.bookmarkdetailscreen
 
-import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -24,7 +23,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.NotInterested
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
@@ -36,10 +34,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -56,7 +50,6 @@ import com.tulgot.lol.domain.SPLASH_ASSET
 import com.tulgot.lol.domain.SQUARE_ASSET
 import com.tulgot.lol.domain.room.model.PassiveRoom
 import com.tulgot.lol.domain.room.model.SpellRoom
-import okhttp3.internal.wait
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -89,7 +82,7 @@ fun BookMarkDetailScreen(
         },
         floatingActionButton = {
 
-            if (isConnected.value){
+            if (isConnected.value) {
                 FloatingActionButton(
                     onClick = {
                         bookMarkDetailViewModel.deleteChampionDetail()
@@ -102,7 +95,7 @@ fun BookMarkDetailScreen(
         },
         floatingActionButtonPosition = FabPosition.End,
 
-    ) { innerPadding ->
+        ) { innerPadding ->
 
         Box(
             modifier = Modifier
@@ -118,16 +111,32 @@ fun BookMarkDetailScreen(
                     .fillMaxWidth()
                     .clickable {
                         singlePhotoPickerLauncher.launch(
-                            PickVisualMediaRequest(ActivityResultContracts
-                                .PickVisualMedia
-                                .ImageOnly)
+                            PickVisualMediaRequest(
+                                ActivityResultContracts
+                                    .PickVisualMedia
+                                    .ImageOnly
+                            )
                         )
                     }) {
+                    if (bookMarkDetailViewModel.championDetail.first().image.toString()
+                            .startsWith("https:")
+                    ) {
+                        AsyncImage(
+                            model = bookMarkDetailViewModel.championDetail.first().image.toString(),
+                            contentDescription = null,
+                            contentScale = ContentScale.FillWidth,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(300.dp)
+                        )
+                    } else {
                         AsyncImage(
                             model = SPLASH_ASSET + "${bookMarkDetailViewModel.championDetail.first().id}_0.jpg",
                             contentDescription = null,
                             contentScale = ContentScale.FillWidth,
                         )
+                    }
+
 
                 }
 

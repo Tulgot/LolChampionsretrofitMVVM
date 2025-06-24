@@ -6,11 +6,10 @@ import javax.inject.Inject
 
 class DefaultStorageManager @Inject constructor(
     private val remoteStorageDataSource: RemoteStorageDataSource
-): StorageManager {
+) : StorageManager {
 
-    override suspend fun storeImage(uid: String, uri: Uri) {
-        remoteStorageDataSource.storeImage(uri, uid)
+    override suspend fun storeImage(uid: String, uri: Uri): String {
+        return remoteStorageDataSource.storeImage(uri, uid)
     }
-
 
 }

@@ -152,4 +152,25 @@ class RemoteFireStoreDataSource @Inject constructor() {
         }
 
     }
+
+    suspend fun updateFavoriteImage(url: String, championId: String, uid: String) {
+        try {
+            val favoriteChampionById = fireStoreDB
+                .collection("Users")
+                .document(uid)
+                .collection("favorites").get().await()
+
+            for (document in favoriteChampionById) {
+                if (document.data.values.contains(championId)) {
+                    fireStoreDB.collection("Users")
+                        .document(uid).collection("favorites")
+                        .document(document.id).update("image", url)
+                }
+            }
+
+        } catch (e: Exception) {
+            throw e
+
+        }
+    }
 }

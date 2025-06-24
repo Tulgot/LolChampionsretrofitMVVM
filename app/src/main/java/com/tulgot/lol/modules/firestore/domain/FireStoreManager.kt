@@ -8,4 +8,5 @@ interface FireStoreManager {
     suspend fun addFavoriteChampion(champion: Champion, uid: String)
     suspend fun deleteFavoriteChampion(championId: String, uid: String)
     suspend fun getFavoriteByUser(uid: String): FavoriteFireStoreByUser
+    suspend fun updateFireStoreChampionImage(url: String, championId: String, uid: String)
 }

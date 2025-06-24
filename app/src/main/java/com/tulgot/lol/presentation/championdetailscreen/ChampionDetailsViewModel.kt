@@ -31,13 +31,13 @@ class ChampionDetailsViewModel @Inject constructor(
     private val lolChampionsRepository: LolChampionsRepository,
     private val roomManager: RoomManager,
     private val fireStoreManager: FireStoreManager,
-    private val connectivityObserver: ConnectivityObserver,
+    connectivityObserver: ConnectivityObserver,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private var _championDetailsState = MutableStateFlow(ChampionDetailsState())
     val championDetailsState = _championDetailsState.asStateFlow()
-    val user = Firebase.auth.currentUser
+    private val user = Firebase.auth.currentUser
     val isConnected = connectivityObserver.isConnected.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000L),
@@ -90,7 +90,8 @@ class ChampionDetailsViewModel @Inject constructor(
     fun deleteChampionDetail() {
         viewModelScope.launch(Dispatchers.IO) {
             withContext(Dispatchers.IO) {
-                val championId = _championDetailsState.value.championDetails?.data?.first()?.id.toString()
+                val championId =
+                    _championDetailsState.value.championDetails?.data?.first()?.id.toString()
                 roomManager.deleteChampionDetail(championId)
                 deleteChampionDetailFireStore(championId)
             }

@@ -4,6 +4,6 @@ import android.net.Uri
 
 interface StorageManager {
 
-    suspend fun storeImage(uid: String, uri: Uri)
+    suspend fun storeImage(uid: String, uri: Uri): String
 }
 

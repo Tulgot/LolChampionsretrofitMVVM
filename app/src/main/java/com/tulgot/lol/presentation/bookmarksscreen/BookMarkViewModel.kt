@@ -2,7 +2,6 @@ package com.tulgot.lol.presentation.bookmarksscreen
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -16,9 +15,6 @@ import com.tulgot.lol.domain.room.model.ChampionRoom
 import com.tulgot.lol.modules.firestore.domain.FireStoreManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -31,31 +27,29 @@ class BookMarkViewModel @Inject constructor(
 ) : ViewModel() {
 
 
+    var championList = mutableStateListOf<ChampionRoom>()
+        private set
 
     init {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                if (championList.isEmpty()) {
-                    getFavoriteChampionsFireStore(connectivityObserver.connectionCheck())
-                }
-
                 getChamionList()
             }
         }
     }
 
-    var championList = mutableStateListOf<ChampionRoom>()
-        private set
-
     private fun getChamionList() {
         viewModelScope.launch(Dispatchers.IO) {
             roomManager.getAllChampions().let {
                 championList.addAll(it)
+                if (it.isEmpty()) {
+                    getFavoriteChampionsFireStore(connectivityObserver.connectionCheck())
+                }
             }
         }
     }
 
-    private fun stringToList(tags: String): List<String>{
+    private fun stringToList(tags: String): List<String> {
         val substring = tags.substring(1, tags.length - 1)
         val substringSplit = substring.split(",").map { it.trim() }
         val listOfSubstring = substringSplit.toList()

@@ -7,13 +7,15 @@ import com.tulgot.lol.data.database.entities.ChampionEntity
 import com.tulgot.lol.data.database.entities.PassiveEntity
 import com.tulgot.lol.data.database.entities.SpellEntity
 
-@Database(entities = [
-    ChampionEntity::class,
-    PassiveEntity::class,
-    SpellEntity::class
-                     ],
-    version = 1, exportSchema = false)
-abstract class ChampionDatabase: RoomDatabase() {
+@Database(
+    entities = [
+        ChampionEntity::class,
+        PassiveEntity::class,
+        SpellEntity::class
+    ],
+    version = 2, exportSchema = false
+)
+abstract class ChampionDatabase : RoomDatabase() {
 
     abstract fun getChampionDao(): ChampionDao
 }

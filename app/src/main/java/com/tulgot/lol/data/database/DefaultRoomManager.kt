@@ -52,20 +52,24 @@ class DefaultRoomManager @Inject constructor(
             it.toSpellRoom()
         }
 
-    override suspend fun deleteChampionDetail(id: String){
+    override suspend fun deleteChampionDetail(id: String) {
         championDao.deleteChampionDetail(id)
     }
 
-    override suspend fun deleteAllChampions(){
+    override suspend fun deleteAllChampions() {
         championDao.deleteAllChampions()
     }
 
-    override suspend fun deleteAllSpells(){
+    override suspend fun deleteAllSpells() {
         championDao.deleteAllSpells()
     }
 
-    override suspend fun deleteAllPassives(){
+    override suspend fun deleteAllPassives() {
         championDao.deleteAllPassives()
+    }
+
+    override suspend fun updateChampionImage(url: String, championId: String) {
+        championDao.updateChampionImage(url, championId)
     }
 
 

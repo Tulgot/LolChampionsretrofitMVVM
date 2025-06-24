@@ -43,4 +43,7 @@ interface ChampionDao {
 
     @Query("DELETE FROM passive_table")
     fun deleteAllPassives()
+
+    @Query("UPDATE champion_table SET image = :url WHERE id = :championId")
+    fun updateChampionImage(url: String, championId: String)
 }

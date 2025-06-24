@@ -1,7 +1,6 @@
 package com.tulgot.lol.presentation.bookmarkdetailscreen
 
 import android.net.Uri
-import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -29,7 +28,7 @@ import javax.inject.Inject
 class BookMarkDetailViewModel @Inject constructor(
     private val roomManager: RoomManager,
     private val fireStoreManager: FireStoreManager,
-    private val connectivityObserver: ConnectivityObserver,
+    connectivityObserver: ConnectivityObserver,
     private val storageManager: StorageManager,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -61,7 +60,7 @@ class BookMarkDetailViewModel @Inject constructor(
 
     private fun getRoomChampionByID(args: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            withContext(Dispatchers.IO){
+            withContext(Dispatchers.IO) {
                 if (roomManager.getChampionById(args).isNotEmpty()) {
                     roomManager.getChampionById(args).let {
                         championDetail.addAll(it)
@@ -77,8 +76,6 @@ class BookMarkDetailViewModel @Inject constructor(
                 }
             }
         }
-
-
     }
 
     private fun stringToList(tags: String) {
@@ -104,13 +101,31 @@ class BookMarkDetailViewModel @Inject constructor(
         }
     }
 
-    fun storeImage(uri: Uri?){
-        if (uri != null){
-            if (uri.toString().isNotEmpty()){
-                viewModelScope.launch(Dispatchers.IO) {
-                    storageManager.storeImage(user?.uid.toString(), uri)
+    fun storeImage(uri: Uri?) {
+        if (uri != null) {
+            viewModelScope.launch(Dispatchers.IO) {
+                withContext(Dispatchers.IO) {
+                    val url = storageManager.storeImage(user?.uid.toString(), uri)
+                    updateRoomChampionImage(url)
+                    updateFireStoreChampionImage(url)
                 }
             }
+        }
+    }
+
+    private fun updateRoomChampionImage(url: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            roomManager.updateChampionImage(url, championDetail.first().id.toString())
+        }
+    }
+
+    private fun updateFireStoreChampionImage(url: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            fireStoreManager.updateFireStoreChampionImage(
+                url,
+                championDetail.first().id.toString(),
+                user?.uid.toString()
+            )
         }
     }
 
