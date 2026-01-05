@@ -32,13 +32,11 @@ class BookMarkViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                getChamionList()
-            }
+                getChampionList()
         }
     }
 
-    private fun getChamionList() {
+    private fun getChampionList() {
         viewModelScope.launch(Dispatchers.IO) {
             roomManager.getAllChampions().let {
                 championList.addAll(it)
@@ -111,6 +109,8 @@ class BookMarkViewModel @Inject constructor(
                             championList.spellList[index].championid!!
                         )
                     }
+                    getChampionList()
+
                 }
             }
         }

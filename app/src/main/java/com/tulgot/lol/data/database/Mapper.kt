@@ -14,7 +14,7 @@ fun Champion.toChampionEntity() =
     ChampionEntity(
         id = id.toString(),
         blurb = blurb.toString(),
-        image = image.toString(),
+        image = image?.full.toString(),
         name = name.toString(),
         lore = lore.toString(),
         tags = tags.toString(),

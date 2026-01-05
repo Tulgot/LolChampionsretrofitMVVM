@@ -8,8 +8,10 @@ class DefaultStorageManager @Inject constructor(
     private val remoteStorageDataSource: RemoteStorageDataSource
 ) : StorageManager {
 
-    override suspend fun storeImage(uid: String, uri: Uri): String {
-        return remoteStorageDataSource.storeImage(uri, uid)
+    override suspend fun storeImage(uid: String, uri: Uri, onSuccess: (String) -> Unit) {
+        remoteStorageDataSource.storeImage(uri, uid, addOnSuccessListener = {
+            onSuccess(it)
+        })
     }
 
 }

@@ -63,7 +63,7 @@ class BookMarkDetailViewModel @Inject constructor(
             withContext(Dispatchers.IO) {
                 if (roomManager.getChampionById(args).isNotEmpty()) {
                     roomManager.getChampionById(args).let {
-                        championDetail.addAll(it)
+                        championDetail[0] = it.first()
                         stringToList(it.first().tags)
 
                     }
@@ -105,9 +105,12 @@ class BookMarkDetailViewModel @Inject constructor(
         if (uri != null) {
             viewModelScope.launch(Dispatchers.IO) {
                 withContext(Dispatchers.IO) {
-                    val url = storageManager.storeImage(user?.uid.toString(), uri)
-                    updateRoomChampionImage(url)
-                    updateFireStoreChampionImage(url)
+                    storageManager.storeImage(user?.uid.toString(), uri, onSuccess =
+                    {
+                        updateRoomChampionImage(it)
+                        updateFireStoreChampionImage(it)
+                    }
+                                    )
                 }
             }
         }
@@ -115,7 +118,14 @@ class BookMarkDetailViewModel @Inject constructor(
 
     private fun updateRoomChampionImage(url: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            roomManager.updateChampionImage(url, championDetail.first().id.toString())
+            withContext(Dispatchers.IO) {
+                val championId = championDetail.first().id.toString()
+                roomManager.updateChampionImage(url, championId)
+                roomManager.getChampionById(championId).let {
+                    championDetail[0] = it.first()
+                }
+            }
+
         }
     }
 

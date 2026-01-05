@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -30,6 +31,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -160,10 +162,11 @@ fun Titles(title: String, value: String, editText: Boolean, onValueChange: (Stri
         EditTextTopLabel(
             value = value, onValueChange = onValueChange,
             isPassword = editText,
-            keyboardOptions = if(editText){
-                KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password)
-            }else{
-                KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email)
+            keyboardOptions = KeyboardOptions(
+                keyboardType = if (editText) KeyboardType.Password else KeyboardType.Email,
+                imeAction = if (editText) ImeAction.Done else ImeAction.Next,
+            ),
+            keyboardActions = KeyboardActions{
             }
         )
     }
