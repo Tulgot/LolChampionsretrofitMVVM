@@ -1,13 +1,14 @@
 [versions]
 agp = "8.11.2"
-kotlin = "1.9.0"
+kotlin = "2.2.0"
+ksp = "2.2.0-2.0.2"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.7"
 composeBom = "2024.04.01"
-hilt = "2.49"
+hilt = "2.54"
 retrofit = "2.9.0"
 coilCompose = "2.6.0"
 hiltNavigationCompose = "1.2.0"
@@ -31,6 +32,7 @@ googleid = "1.1.1"
 firebase-bom = "33.3.0"
 maps-services = "18.0.2"
 maps-compose = "2.1.0"
+mock = "1.14.7"
 
 
 [libraries]
@@ -108,6 +110,9 @@ google-maps-compose = { module = "com.google.maps.android:maps-compose", version
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore"}
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 
+#TestImplementation (Mock)
+io-mock-mock = {module = "io.mockk:mockk", version.ref = "mock"}
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -115,3 +120,5 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 jetbrainsKotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

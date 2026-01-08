@@ -8,6 +8,7 @@ pluginManagement {
             }
         }
         mavenCentral()
+        //maven("https://artifactory.img.ly/artifactory/imgly")
         gradlePluginPortal()
     }
 }
