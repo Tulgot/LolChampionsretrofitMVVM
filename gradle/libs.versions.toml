@@ -33,6 +33,10 @@ firebase-bom = "33.3.0"
 maps-services = "18.0.2"
 maps-compose = "2.1.0"
 mock = "1.14.7"
+junitJupiter = "5.8.1"
+mockito = "4.0.0"
+coroutine-test = "1.10.2"
+arch-core = "2.2.0"
 
 
 [libraries]
@@ -112,6 +116,11 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 
 #TestImplementation (Mock)
 io-mock-mock = {module = "io.mockk:mockk", version.ref = "mock"}
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
+mockito = {group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockito"}
+kotlinx-coroutines = {group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutine-test"}
+androidx-arch-core = {group = "androidx.arch.core", name = "core-testing", version.ref = "arch-core"}
+
 
 
 [plugins]

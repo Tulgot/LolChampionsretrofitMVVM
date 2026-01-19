@@ -21,7 +21,7 @@ const val TAG = "LoginErrorMessage"
 class LoginViewModel @Inject constructor(
     private val loginManager: LoginManager,
     private val roomManager: RoomManager,
-    private val connectivityObserver: ConnectivityObserver
+    connectivityObserver: ConnectivityObserver
 ) : ViewModel() {
 
     var authResult = mutableStateListOf<AuthResult?>()

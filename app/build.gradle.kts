@@ -87,6 +87,7 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui.tooling.preview)
 
+
     //Compose
     implementation(libs.compose.activity)
     implementation(libs.compose.uitooling)
@@ -109,6 +110,7 @@ dependencies {
     implementation(libs.dagger.hilt)
     implementation(libs.dagger.hilt.navigation)
     implementation(project(":core"))
+    testImplementation(libs.junit.jupiter)
     ksp(libs.dagger.hilt.compiler)
 
     //Firebase Google Auth
@@ -160,5 +162,11 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     testImplementation(libs.io.mock.mock)
+    testImplementation(libs.mockito)
+    testImplementation(libs.kotlinx.coroutines)
+    testImplementation(libs.androidx.arch.core)
+    testImplementation(kotlin("test"))
+    implementation("org.jetbrains.kotlin:kotlin-test")
+
 
 }

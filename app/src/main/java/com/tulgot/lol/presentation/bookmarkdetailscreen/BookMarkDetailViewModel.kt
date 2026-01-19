@@ -63,7 +63,8 @@ class BookMarkDetailViewModel @Inject constructor(
             withContext(Dispatchers.IO) {
                 if (roomManager.getChampionById(args).isNotEmpty()) {
                     roomManager.getChampionById(args).let {
-                        championDetail[0] = it.first()
+//                        championDetail[0] = it.first()
+                        championDetail.add(it.first())
                         stringToList(it.first().tags)
 
                     }

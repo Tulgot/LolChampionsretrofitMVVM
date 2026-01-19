@@ -3,10 +3,12 @@ package com.tulgot.lol.presentation.championlistscreen
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tulgot.lol.di.IoDispatcher
 import com.tulgot.lol.domain.LolChampionsRepository
 import com.tulgot.lol.domain.network.UiStates
 import com.tulgot.lol.domain.network.internetconnectionobserver.domain.ConnectivityObserver
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -20,31 +22,26 @@ import javax.inject.Inject
 @HiltViewModel
 class ChampionListViewModel @Inject constructor(
     private val lolChampionsRepository: LolChampionsRepository,
-    connectivityObserver: ConnectivityObserver
+    connectivityObserver: ConnectivityObserver,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
 
     private var _championListState = MutableStateFlow(ChampionListState())
     val championListState = _championListState.asStateFlow()
-    val isConnected = connectivityObserver.isConnected.stateIn(
-        viewModelScope,
+    val isConnected = connectivityObserver.isConnected.stateIn(viewModelScope,
         SharingStarted.WhileSubscribed(5000L),
-        false
-    )
+        false )
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher){
             loadChampionList()
         }
     }
 
-    private fun loadChampionList() {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                _championListState.update {
+    fun loadChampionList() {
+        viewModelScope.launch(dispatcher){
+            _championListState.update {
                     it.copy(state = UiStates.LOADING)
-                }
-            } catch (e: Exception) {
-                e.stackTraceToString()
             }
             lolChampionsRepository.getAllChampions().catch { cause ->
                 Log.e(this::class.simpleName, cause.toString())
