@@ -28,7 +28,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -60,22 +63,27 @@ fun LoginScreen(
                 .fillMaxWidth(0.8f)
                 .fillMaxHeight()
                 .padding(top = 50.dp)
-                .align(Alignment.Center),
+                .align(Alignment.Center)
+                .semantics{
+                    this.contentDescription = "LoginScreen"
+                },
         ) {
-            welcome("Bienvenido!")
+            Welcome("Bienvenido!")
             Spacer(Modifier.height(40.dp))
-            Titles("Correo: ", email, false) { email = it }
+            Titles("Correo: ", email, false, "emailInput") { email = it }
             Spacer(Modifier.height(20.dp))
-            Titles("Contraseña: ", psw, true) { psw = it }
+            Titles("Contraseña: ", psw, true, "passwordInput") { psw = it }
 
 
-            Button(modifier = Modifier
-                .padding(top = 50.dp)
-                .height(50.dp)
-                .fillMaxWidth(),
-                enabled = if ( email.isNotEmpty() && psw.isNotEmpty() )true else false,
+            Button(
+                modifier = Modifier
+                    .padding(top = 50.dp)
+                    .height(50.dp)
+                    .fillMaxWidth(),
+                enabled = if (email.isNotEmpty() && psw.isNotEmpty()) true else false,
                 onClick = {
-                    loginViewModel.signIn(email, psw,
+                    loginViewModel.signIn(
+                        email, psw,
                         success = {
                             navigateToChampionList()
                         },
@@ -92,10 +100,11 @@ fun LoginScreen(
                 Text("Iniciar Sesión")
             }
 
-            Button(modifier = Modifier
-                .padding(top = 30.dp)
-                .height(50.dp)
-                .fillMaxWidth(),
+            Button(
+                modifier = Modifier
+                    .padding(top = 30.dp)
+                    .height(50.dp)
+                    .fillMaxWidth(),
                 onClick = {
                     navigateToRegistration()
                 }) {
@@ -103,13 +112,14 @@ fun LoginScreen(
                 Spacer(Modifier.width(10.dp))
             }
 
-            Button(modifier = Modifier
-                .padding(top = 30.dp)
-                .height(50.dp)
-                .fillMaxWidth(),
+            Button(
+                modifier = Modifier
+                    .padding(top = 30.dp)
+                    .height(50.dp)
+                    .fillMaxWidth(),
 
                 onClick = {
-                    loginViewModel.start(
+                    loginViewModel.LoginWithGoogleAccount(
                         success = navigateToChampionList
                     )
                 }) {
@@ -127,14 +137,15 @@ fun LoginScreen(
             Spacer(
                 Modifier
                     .fillMaxWidth()
-                    .height(10.dp))
+                    .height(10.dp)
+            )
 
             if (emailMessage) {
-                failValidation("Verificar el correo")
+                FailValidation("Verificar el correo")
             }
 
             if (pswMessage) {
-                failValidation(
+                FailValidation(
                     "La contraseña debe contar \n" +
                             "con almenos una letra mayuscula \n" +
                             "una letra minuscula \n" +
@@ -149,7 +160,7 @@ fun LoginScreen(
 }
 
 @Composable
-fun Titles(title: String, value: String, editText: Boolean, onValueChange: (String) -> Unit) {
+fun Titles(title: String, value: String, editText: Boolean, testTag: String, onValueChange: (String) -> Unit) {
     Column(Modifier.wrapContentHeight()) {
         Text(
             text = title,
@@ -160,20 +171,21 @@ fun Titles(title: String, value: String, editText: Boolean, onValueChange: (Stri
             )
         )
         EditTextTopLabel(
+            modifier = Modifier.testTag(testTag),
             value = value, onValueChange = onValueChange,
             isPassword = editText,
             keyboardOptions = KeyboardOptions(
                 keyboardType = if (editText) KeyboardType.Password else KeyboardType.Email,
                 imeAction = if (editText) ImeAction.Done else ImeAction.Next,
             ),
-            keyboardActions = KeyboardActions{
+            keyboardActions = KeyboardActions {
             }
         )
     }
 }
 
 @Composable
-fun welcome(welcome: String) {
+fun Welcome(welcome: String) {
     Text(
         text = welcome,
         style = TextStyle(
@@ -185,12 +197,12 @@ fun welcome(welcome: String) {
 }
 
 @Composable
-fun failValidation(messege: String){
+fun FailValidation(message: String) {
     Text(
-        text = messege,
+        text = message,
         style = TextStyle(
             fontSize = 16.sp,
             color = Color.Gray,
-    )
+        )
     )
 }

@@ -33,12 +33,20 @@ class ChampionListViewModel @Inject constructor(
         false )
 
     init {
-        viewModelScope.launch(dispatcher){
-            loadChampionList()
+        championListEvents(
+            ChampionListScreenEvents.LoadChampionList
+        )
+    }
+
+    fun championListEvents(championListScreenEvents: ChampionListScreenEvents){
+        when(championListScreenEvents) {
+            ChampionListScreenEvents.LoadChampionList -> {
+                loadChampionList()
+            }
         }
     }
 
-    fun loadChampionList() {
+    private fun loadChampionList() {
         viewModelScope.launch(dispatcher){
             _championListState.update {
                     it.copy(state = UiStates.LOADING)
@@ -58,7 +66,6 @@ class ChampionListViewModel @Inject constructor(
                         state = UiStates.SUCCESS
                     )
                 }
-
             }
         }
     }

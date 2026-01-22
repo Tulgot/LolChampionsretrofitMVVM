@@ -34,7 +34,7 @@ class LoginViewModel @Inject constructor(
     )
 
 
-    fun start(success: () -> Unit) {
+    fun LoginWithGoogleAccount(success: () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             withContext(Dispatchers.IO) {
                 loginManager.signInGoogle().collect {

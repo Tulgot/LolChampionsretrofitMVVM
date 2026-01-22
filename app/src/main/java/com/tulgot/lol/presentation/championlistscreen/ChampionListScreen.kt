@@ -1,6 +1,5 @@
 package com.tulgot.lol.presentation.championlistscreen
 
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,9 +27,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,86 +45,14 @@ import com.tulgot.lol.domain.network.UiStates
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChampionListScreen(
-    championListViewModel: ChampionListViewModel = hiltViewModel(),
-    navigateToDetail: (String) -> Unit,
+fun ChampionListRoute(
+    viewModel: ChampionListViewModel = hiltViewModel(),
+    navigateToDetail: (String) -> Unit
 ) {
-
-    val championListResult by championListViewModel.championListState.collectAsState()
-    val championList = championListResult.championList?.data?.toList()
-    val context = LocalContext.current
-    val isConnected = championListViewModel.isConnected.collectAsState()
-
-
+    val championListResult by viewModel.championListState.collectAsState()
+    val isConnected by viewModel.isConnected.collectAsState()
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        content = { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = innerPadding.calculateTopPadding())
-                    .padding(horizontal = 20.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                if (isConnected.value) {
-                    when (championListResult.state) {
-                        UiStates.FAILURE -> {
-                            Toast.makeText(context, "No hay datos", Toast.LENGTH_SHORT).show()
-                        }
-
-                        UiStates.LOADING -> {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                CircularProgressIndicator(
-                                    modifier = Modifier
-                                        .size(80.dp),
-                                    color = MaterialTheme.colorScheme.primary,
-                                )
-                            }
-                        }
-
-                        UiStates.SUCCESS -> {
-
-                            LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                                championList?.let { championlist ->
-                                    items(championlist.size) { champion ->
-                                        ChampionCard(championList[champion], navigateToDetail)
-                                    }
-                                }
-
-                            }
-                        }
-
-                        UiStates.NONE -> {}
-                    }
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .align(Alignment.CenterHorizontally),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Icon(
-                                painter = painterResource(R.drawable.wifioff_111094),
-                                contentDescription = null,
-                                Modifier.size(width = 50.dp, height = 50.dp)
-                            )
-                            Text(
-                                text = "Detectamos problemas con su conexion a internet",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier.width(300.dp)
-
-                            )
-                        }
-                    }
-                }
-
-            }
-        },
         topBar = {
             TopAppBar(
                 colors = topAppBarColors(
@@ -133,9 +63,116 @@ fun ChampionListScreen(
                     Text("Champions")
                 }
             )
+        })
+    { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = innerPadding.calculateTopPadding())
+                .padding(horizontal = 20.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            ChampionListScreen(
+                championListResult,
+                isConnected,
+                navigateToDetail = { name ->
+                    navigateToDetail(name)
+                }
+            )
         }
-    )
+    }
 
+
+}
+
+@Composable
+fun ChampionListScreen(
+    state: ChampionListState,
+    isConnected: Boolean,
+    navigateToDetail: (String) -> Unit,
+) {
+    if (isConnected) {
+        when (state.state) {
+            UiStates.FAILURE -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .semantics {
+                            this.contentDescription = "Failure Indicator"
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "No hay Datos", fontSize = 24.sp, textAlign = TextAlign.Center)
+                }
+//                            Toast.makeText(context, "No hay datos", Toast.LENGTH_SHORT).show()
+            }
+
+            UiStates.LOADING -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .semantics {
+                            this.contentDescription = "Loading Indicator"
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(80.dp),
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                }
+            }
+
+            UiStates.SUCCESS -> {
+
+                LazyColumn(
+                    modifier = Modifier.semantics {
+                        this.contentDescription = "Success Indicator"
+                    },
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    state.championList?.data.let { championList ->
+                        items(championList?.size ?: 0) { champion ->
+                            championList?.get(champion)?.let {
+                                ChampionCard(it, navigateToDetail)
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            UiStates.NONE -> {
+                Box(modifier = Modifier
+                    .semantics {
+                        this.contentDescription = "None Indicator"
+                    }
+                    .testTag("None Indicator")) {}
+            }
+        }
+    } else {
+        Box(
+            modifier = Modifier
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Icon(
+                    painter = painterResource(R.drawable.wifioff_111094),
+                    contentDescription = null,
+                    Modifier.size(width = 50.dp, height = 50.dp)
+                )
+                Text(
+                    text = "Detectamos problemas con su conexion a internet",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.width(300.dp)
+
+                )
+            }
+        }
+    }
 
 }
 
@@ -143,7 +180,7 @@ fun ChampionListScreen(
 @Composable
 fun ChampionCard(championList: Champion, navigateToDetail: (String) -> Unit) {
 
-    val name = championList.id.toString()
+    val name = championList?.id.toString()
 
     Row(
         modifier = Modifier
@@ -155,7 +192,7 @@ fun ChampionCard(championList: Champion, navigateToDetail: (String) -> Unit) {
     ) {
 
         AsyncImage(
-            model = IMAGE_URL + "${championList.id}_0.jpg",
+            model = IMAGE_URL + "${championList?.id}_0.jpg",
             contentDescription = null,
             contentScale = ContentScale.FillWidth,
             modifier = Modifier
@@ -169,13 +206,13 @@ fun ChampionCard(championList: Champion, navigateToDetail: (String) -> Unit) {
                 .padding(vertical = 10.dp)
         ) {
             Text(
-                championList.name.toString(),
+                championList?.name.toString(),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
 
             Text(
-                text = championList.blurb.toString(),
+                text = championList?.blurb.toString(),
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 3,
                 style = MaterialTheme.typography.bodyMedium,

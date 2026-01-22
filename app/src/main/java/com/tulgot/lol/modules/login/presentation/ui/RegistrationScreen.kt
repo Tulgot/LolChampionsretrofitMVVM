@@ -59,11 +59,11 @@ fun RegistrationScreen(
                 .padding(top = 50.dp)
                 .align(Alignment.TopCenter),
         ) {
-            welcome("Registrarse")
+            Welcome("Registrarse")
             Spacer(Modifier.height(40.dp))
-            Titles("Correo: ", email, false) { email = it }
+            Titles("Correo: ", email, false , "emailInput") { email = it }
             Spacer(Modifier.height(20.dp))
-            Titles("Contraseña: ", psw, true) { psw = it }
+            Titles("Contraseña: ", psw, true, "passworInput") { psw = it }
 
             Button(modifier = Modifier
                 .padding(top = 30.dp)
@@ -87,11 +87,11 @@ fun RegistrationScreen(
 
             Spacer(Modifier.height(20.dp))
             if (emailMessege) {
-                failValidation("Verificar el correo")
+                FailValidation("Verificar el correo")
             }
 
             if (pswMessege) {
-                failValidation(
+                FailValidation(
                     "La contraseña debe contar \n" +
                             "con almenos una letra mayuscula \n" +
                             "una letra minuscula \n" +

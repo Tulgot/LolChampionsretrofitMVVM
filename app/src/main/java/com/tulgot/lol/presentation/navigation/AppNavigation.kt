@@ -49,6 +49,7 @@ import com.tulgot.lol.presentation.SignInGraph
 import com.tulgot.lol.presentation.bookmarkdetailscreen.BookMarkDetailScreen
 import com.tulgot.lol.presentation.bookmarksscreen.BookMarksScreen
 import com.tulgot.lol.presentation.championdetailscreen.ChampionDetailsScreen
+import com.tulgot.lol.presentation.championlistscreen.ChampionListRoute
 import com.tulgot.lol.presentation.championlistscreen.ChampionListScreen
 import com.tulgot.lol.presentation.listRoute
 import com.tulgot.lol.presentation.mapscreen.MapScreen
@@ -136,7 +137,7 @@ fun AppNavigation() {
                 NavHost(navController = navController, startDestination = HomeGraph) {
                     navigation<HomeGraph>(startDestination = ChampionListRoute) {
                         composable<ChampionListRoute> {
-                            ChampionListScreen(
+                            ChampionListRoute(
                                 navigateToDetail = { name ->
                                     navController.navigate(ChampionDetailsRoute(name = name)) {
                                     }
