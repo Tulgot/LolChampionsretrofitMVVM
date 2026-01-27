@@ -1,10 +1,3 @@
-Se utiliza la api de LOL(League of Legends)
-
--Con utilizacion de retrofit
--Patron de arquitectura MVVM
--Clean Arquitecture
--States
-
 #  LOL(League of Legends) Android App
 
 Show list of champions of the game of League of Legends game and detaill.
